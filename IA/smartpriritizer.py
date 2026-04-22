@@ -38,3 +38,20 @@ def generate(data: dict):
     # Route pour générer des tâches automatiquement via IA
     return generate_tasks(data["prompt"])
     # Utilise une fonction IA pour générer les tâches
+
+    @router.post("/prioritize")
+def prioritize_tasks(data: dict):
+    # Route pour prioriser les tâches (version sans wrapper JSON)
+    return prioritize(data["tasks"])
+    # Retour direct du résultat IA
+
+
+
+@router.get("/")
+def get_stats():
+    # Route pour obtenir des statistiques (exemple)
+    return {
+        "todo": 5,
+        "progress": 3,
+        "done": 8
+    }
