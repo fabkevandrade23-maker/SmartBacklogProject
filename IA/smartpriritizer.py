@@ -32,3 +32,9 @@ def login(user: UserLogin):
     # Génère un token avec l'email de l'utilisateur
     return {"access_token": token}
     # Retourne le token
+    
+@router.post("/generate")
+def generate(data: dict):
+    # Route pour générer des tâches automatiquement via IA
+    return generate_tasks(data["prompt"])
+    # Utilise une fonction IA pour générer les tâches
