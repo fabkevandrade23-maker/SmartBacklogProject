@@ -1,3 +1,4 @@
+from gpt_service import prioritize
 from jose import jwt  # Librairie pour créer et gérer les tokens JWT
 from datetime import datetime, timedelta  # Gestion du temps (expiration possible des tokens)
 
@@ -39,7 +40,7 @@ def generate(data: dict):
     return generate_tasks(data["prompt"])
     # Utilise une fonction IA pour générer les tâches
 
-    @router.post("/prioritize")
+@router.post("/prioritize")
 def prioritize_tasks(data: dict):
     # Route pour prioriser les tâches (version sans wrapper JSON)
     return prioritize(data["tasks"])
