@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-black text-white">
+
+<header class="p-4 flex justify-between bg-white/10">
+  <h1>SmartBacklog</h1>
+  <button onclick="runAI()">Button IA</button>
+</header>
+
+<div class="grid grid-cols-3 gap-4 p-4">
+
+  <div class="dropzone" data-status="todo">To Do</div>
+  <div class="dropzone" data-status="progress">Progress</div>
+  <div class="dropzone" data-status="done">Done</div>
+
+</div>
+
+<script src="js/kanban.js"></script>
+<script src="js/websocket.js"></script>
+<script src="js/ai.js"></script>
+
+</body>
+</html>

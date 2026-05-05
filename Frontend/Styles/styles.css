@@ -1,0 +1,12 @@
+.dropzone {
+  border: 1px solid rgba(255, 255, 255, 0.884);
+  min-height: 200px;
+  padding: 10px;
+}
+
+.task {
+  background: rgba(184, 50, 189, 0.637);
+  padding: 10px;
+  margin: 5px;
+  cursor: grab;
+}
