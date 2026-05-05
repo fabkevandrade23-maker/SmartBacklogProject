@@ -1,7 +1,7 @@
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 
-from routes import auth, tasks, ai, analytics
+from Backend.routes import auth, tasks, ai, analytics
 from websocket import websocket_endpoint
 
 app = FastAPI()
