@@ -1,27 +1,266 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartBacklog — Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
+<body>
 
-<body class="bg-black text-white">
+<div class="app-shell">
 
-<header class="p-4 flex justify-between bg-white/10">
-  <h1>SmartBacklog</h1>
-  <button onclick="runAI()">Button IA</button>
-</header>
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="sidebar">
+    <a class="sidebar-logo" href="#">
+      <div class="logo-icon">⚡</div>
+      SmartBacklog
+    </a>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Navigation</div>
+      <button class="nav-item active" onclick="showView('dashboard', this)">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </button>
+      <button class="nav-item" onclick="showView('kanban', this)">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="5" height="18" rx="1"/><rect x="10" y="3" width="5" height="12" rx="1"/><rect x="17" y="3" width="5" height="15" rx="1"/></svg>
+        Kanban Board
+        <span class="nav-badge" id="pending-count">0</span>
+      </button>
+      <button class="nav-item" onclick="showView('analytics', this)">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Analytics
+      </button>
+      <button class="nav-item" onclick="showView('ai', this)">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+        IA Prioritizer
+      </button>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Compte</div>
+      <button class="nav-item" onclick="openModal('new-task')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        Nouvelle tâche
+      </button>
+      <button class="nav-item" onclick="showView('settings', this)">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Paramètres
+      </button>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-chip" onclick="showView('settings')">
+        <div class="avatar" id="user-avatar">?</div>
+        <div class="user-info">
+          <div class="user-name" id="user-name">Chargement...</div>
+          <div class="user-role" id="user-role">Utilisateur</div>
+        </div>
+      </div>
+    </div>
+  </aside>
 
-<div class="grid grid-cols-3 gap-4 p-4">
+  <!-- ══ HEADER ══ -->
+  <header class="header">
+    <h1 class="header-title" id="view-title">Dashboard</h1>
+    <div class="header-actions">
+      <div class="search-bar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" placeholder="Rechercher une tâche..." id="search-input" oninput="filterTasks()" />
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="openModal('new-task')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Nouvelle tâche
+      </button>
+      <button class="btn btn-ghost btn-icon" onclick="logout()" title="Déconnexion">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </button>
+    </div>
+  </header>
 
-  <div class="dropzone" data-status="todo">To Do</div>
-  <div class="dropzone" data-status="progress">Progress</div>
-  <div class="dropzone" data-status="done">Done</div>
+  <!-- ══ MAIN ══ -->
+  <main class="main-content">
 
+    <!-- DASHBOARD -->
+    <div id="view-dashboard">
+      <div class="stats-grid">
+        <div class="stat-card accent"><div class="stat-label">Total tâches</div><div class="stat-value" id="stat-total">—</div><div class="stat-trend">Toutes les tâches</div></div>
+        <div class="stat-card emerald"><div class="stat-label">Terminées</div><div class="stat-value" id="stat-done">—</div><div class="stat-trend trend-up" id="stat-pct">—</div></div>
+        <div class="stat-card amber"><div class="stat-label">En cours</div><div class="stat-value" id="stat-inprogress">—</div><div class="stat-trend">Actuellement actives</div></div>
+        <div class="stat-card rose"><div class="stat-label">Haute priorité</div><div class="stat-value" id="stat-high">—</div><div class="stat-trend trend-down">Nécessitent attention</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start;">
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+            <h2 style="font-size:16px;font-weight:600;">Tâches récentes</h2>
+            <button class="btn btn-ghost btn-sm" onclick="showView('kanban')">Voir tout →</button>
+          </div>
+          <div id="recent-tasks-list"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div class="card">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+              <span style="font-size:20px;">🤖</span>
+              <h3 style="font-size:15px;font-weight:600;">IA Prioritizer</h3>
+            </div>
+            <p style="font-size:13px;color:var(--text-muted);margin-bottom:14px;">GPT-4o analyse et priorise votre backlog automatiquement.</p>
+            <button class="btn btn-primary" style="width:100%;" onclick="runAIPrioritize()" id="ai-quick-btn">⚡ Analyser le backlog</button>
+            <div class="ai-panel" id="ai-quick-result" style="display:none;">
+              <div class="ai-panel-header">🤖 Résultat IA</div>
+              <div class="ai-result" id="ai-quick-text"></div>
+            </div>
+          </div>
+          <div class="card">
+            <h3 style="font-size:15px;font-weight:600;margin-bottom:16px;">Progression</h3>
+            <div style="margin-bottom:12px;">
+              <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-bottom:4px;"><span>Haute priorité</span><span id="prog-high-lbl">0/0</span></div>
+              <div class="progress-bar"><div class="progress-fill rose" id="prog-high" style="width:0%"></div></div>
+            </div>
+            <div style="margin-bottom:12px;">
+              <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-bottom:4px;"><span>Priorité moyenne</span><span id="prog-med-lbl">0/0</span></div>
+              <div class="progress-bar"><div class="progress-fill amber" id="prog-med" style="width:0%"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-bottom:4px;"><span>Basse priorité</span><span id="prog-low-lbl">0/0</span></div>
+              <div class="progress-bar"><div class="progress-fill" id="prog-low" style="width:0%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KANBAN -->
+    <div id="view-kanban" style="display:none;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;flex-wrap:wrap;">
+        <div class="tabs">
+          <button class="tab active" onclick="filterKanban('all',this)">Tout</button>
+          <button class="tab" onclick="filterKanban('high',this)">Haute</button>
+          <button class="tab" onclick="filterKanban('medium',this)">Moyenne</button>
+          <button class="tab" onclick="filterKanban('low',this)">Basse</button>
+        </div>
+        <button class="btn btn-ghost btn-sm" style="margin-left:auto;" onclick="openModal('new-task')">+ Ajouter une tâche</button>
+      </div>
+      <div class="kanban">
+        <div class="kanban-col" id="col-todo" ondragover="onDragOver(event)" ondrop="onDrop(event,'todo')" ondragleave="onDragLeave(event)">
+          <div class="kanban-col-header"><div class="col-dot" style="background:#6366f1;"></div>À faire<span class="col-count" id="count-todo">0</span></div>
+          <div id="tasks-todo"></div>
+        </div>
+        <div class="kanban-col" id="col-inprogress" ondragover="onDragOver(event)" ondrop="onDrop(event,'inprogress')" ondragleave="onDragLeave(event)">
+          <div class="kanban-col-header"><div class="col-dot" style="background:#f59e0b;"></div>En cours<span class="col-count" id="count-inprogress">0</span></div>
+          <div id="tasks-inprogress"></div>
+        </div>
+        <div class="kanban-col" id="col-done" ondragover="onDragOver(event)" ondrop="onDrop(event,'done')" ondragleave="onDragLeave(event)">
+          <div class="kanban-col-header"><div class="col-dot" style="background:#10b981;"></div>Terminé<span class="col-count" id="count-done">0</span></div>
+          <div id="tasks-done"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div id="view-analytics" style="display:none;">
+      <div class="stats-grid" style="margin-bottom:28px;">
+        <div class="stat-card accent"><div class="stat-label">Vélocité</div><div class="stat-value" id="ana-velocity">—</div><div class="stat-trend">tâches / semaine</div></div>
+        <div class="stat-card emerald"><div class="stat-label">Taux de complétion</div><div class="stat-value" id="ana-completion">—</div><div class="stat-trend">du backlog total</div></div>
+        <div class="stat-card amber"><div class="stat-label">Analysées par IA</div><div class="stat-value" id="ana-ai">—</div><div class="stat-trend">tâches priorisées</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+        <div class="card"><h3 style="font-size:15px;font-weight:600;margin-bottom:20px;">Distribution des priorités</h3><canvas id="chart-priority" height="200"></canvas></div>
+        <div class="card"><h3 style="font-size:15px;font-weight:600;margin-bottom:20px;">Statut des tâches</h3><canvas id="chart-status" height="200"></canvas></div>
+      </div>
+    </div>
+
+    <!-- IA -->
+    <div id="view-ai" style="display:none;">
+      <div style="max-width:700px;">
+        <div class="card card-glow">
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:24px;">
+            <div style="width:48px;height:48px;background:var(--accent-glow);border-radius:var(--radius-md);display:grid;place-items:center;font-size:24px;border:1px solid rgba(99,102,241,0.2);">🤖</div>
+            <div><h2 style="font-size:18px;font-weight:700;">IA Prioritizer</h2><p style="font-size:13px;color:var(--text-muted);">Powered by GPT-4o</p></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Contexte du projet (optionnel)</label>
+            <textarea class="form-textarea" id="ai-context" placeholder="Ex: Application SaaS B2B, sprint de 2 semaines..."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Critère de priorisation</label>
+            <select class="form-select" id="ai-criteria">
+              <option value="impact">Impact business</option>
+              <option value="effort">Effort vs impact (quick wins)</option>
+              <option value="urgency">Urgence</option>
+              <option value="risk">Réduction de risque</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" style="width:100%;padding:12px;font-size:15px;" onclick="runAIFull()" id="ai-full-btn">⚡ Lancer l'analyse IA complète</button>
+        </div>
+        <div class="ai-panel" id="ai-full-result" style="display:none;">
+          <div class="ai-panel-header">🤖 Analyse complète<span class="badge badge-ai" style="margin-left:auto;">GPT-4o</span></div>
+          <div class="ai-result" id="ai-full-text"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PARAMÈTRES -->
+    <div id="view-settings" style="display:none;">
+      <div style="max-width:620px;display:flex;flex-direction:column;gap:20px;">
+        <div class="card">
+          <h3 style="font-size:15px;font-weight:600;margin-bottom:20px;">Mon profil</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+            <div class="form-group" style="margin-bottom:0;"><label class="form-label">Nom complet</label><input type="text" class="form-input" id="set-name" placeholder="Prénom Nom" /></div>
+            <div class="form-group" style="margin-bottom:0;"><label class="form-label">Email</label><input type="email" class="form-input" id="set-email" placeholder="email@exemple.com" /></div>
+          </div>
+          <div style="margin-top:16px;"><button class="btn btn-primary" onclick="saveProfile()">Sauvegarder le profil</button></div>
+        </div>
+        <div class="card">
+          <h3 style="font-size:15px;font-weight:600;margin-bottom:20px;">Changer le mot de passe</h3>
+          <div class="form-group"><label class="form-label">Mot de passe actuel</label><input type="password" class="form-input" id="set-old-pwd" placeholder="••••••••" /></div>
+          <div class="form-group"><label class="form-label">Nouveau mot de passe</label><input type="password" class="form-input" id="set-new-pwd" placeholder="Minimum 6 caractères" /></div>
+          <div class="form-group"><label class="form-label">Confirmer</label><input type="password" class="form-input" id="set-confirm-pwd" placeholder="••••••••" /></div>
+          <button class="btn btn-primary" onclick="changePassword()">Modifier le mot de passe</button>
+        </div>
+        <div class="card" id="admin-panel" style="display:none;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+            <h3 style="font-size:15px;font-weight:600;">Gestion des utilisateurs</h3>
+            <span class="badge badge-ai">Administrateur</span>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="loadAdminUsers()" style="margin-bottom:14px;">🔄 Rafraîchir la liste</button>
+          <div id="admin-users-list"><p style="font-size:13px;color:var(--text-muted);">Cliquez sur Rafraîchir pour charger les utilisateurs.</p></div>
+        </div>
+        <div class="card">
+          <h3 style="font-size:15px;font-weight:600;margin-bottom:12px;">Zone de danger</h3>
+          <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;">Ces actions sont irréversibles et n'affectent que votre compte.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="btn btn-danger" onclick="clearAllTasks()">🗑️ Supprimer toutes mes tâches</button>
+            <button class="btn btn-danger" onclick="logout()">🚪 Se déconnecter</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
 </div>
 
-<script src="js/kanban.js"></script>
-<script src="js/websocket.js"></script>
-<script src="js/ai.js"></script>
+<!-- MODAL tâche -->
+<div class="modal-overlay" id="modal-new-task" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modal-task-title">Nouvelle tâche</h2>
+      <button class="btn btn-ghost btn-icon" onclick="closeModal('new-task')">✕</button>
+    </div>
+    <input type="hidden" id="edit-task-id" />
+    <div class="form-group"><label class="form-label">Titre <span style="color:var(--rose)">*</span></label><input type="text" class="form-input" id="task-title-input" placeholder="Ex: Implémenter l'authentification JWT" /></div>
+    <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="task-desc-input" placeholder="Décrivez la tâche..."></textarea></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+      <div class="form-group"><label class="form-label">Priorité</label><select class="form-select" id="task-priority-input"><option value="high">🔴 Haute</option><option value="medium" selected>🟡 Moyenne</option><option value="low">🟢 Basse</option></select></div>
+      <div class="form-group"><label class="form-label">Statut</label><select class="form-select" id="task-status-input"><option value="todo" selected>À faire</option><option value="inprogress">En cours</option><option value="done">Terminé</option></select></div>
+    </div>
+    <div class="form-group"><label class="form-label">Assigné à</label><input type="text" class="form-input" id="task-assignee-input" placeholder="Nom du membre" /></div>
+    <div style="display:flex;gap:10px;margin-top:8px;">
+      <button class="btn btn-ghost" style="flex:1;" onclick="closeModal('new-task')">Annuler</button>
+      <button class="btn btn-primary" style="flex:2;" onclick="saveTask()">Sauvegarder</button>
+    </div>
+  </div>
+</div>
 
+<div class="toast-container" id="toasts"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="app.js"></script>
 </body>
 </html>

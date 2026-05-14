@@ -1,23 +1,30 @@
-from fastapi import FastAPI, WebSocket
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
 from routes import auth, tasks, ai, analytics
-from websocket import websocket_endpoint
 
-app = FastAPI()
+app = FastAPI(
+    title="SmartBacklog API",
+    description="Assistant IA Management Backend",
+    version="2.0.0"
+)
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-app.include_router(auth.router, prefix="/auth")
-app.include_router(tasks.router, prefix="/tasks")
-app.include_router(ai.router, prefix="/ai")
-app.include_router(analytics.router, prefix="/analytics")
+app.include_router(auth.router)
+app.include_router(tasks.router)
+app.include_router(ai.router)
+app.include_router(analytics.router)
 
-@app.websocket("/ws")
-async def websocket_route(websocket: WebSocket):
-    await websocket_endpoint(websocket)
+@app.get("/")
+def root():
+    return {"app": "SmartBacklog API", "version": "2.0.0", "status": "running", "docs": "/docs"}
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
