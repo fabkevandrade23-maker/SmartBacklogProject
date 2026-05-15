@@ -4,235 +4,553 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SmartBacklog — Connexion</title>
-  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
   <style>
-    body { display:flex; align-items:center; justify-content:center; min-height:100vh; }
-    .auth-wrap { width:100%; max-width:440px; padding:24px; }
-    .auth-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-xl); padding:36px; }
-    .auth-logo { text-align:center; margin-bottom:28px; }
-    .logo-big  { width:56px; height:56px; background:linear-gradient(135deg,#6366f1,#818cf8); border-radius:14px; display:inline-flex; align-items:center; justify-content:center; font-size:28px; margin-bottom:12px; }
-    .auth-title { font-family:'Syne',sans-serif; font-size:24px; font-weight:800; color:var(--text-primary); }
-    .auth-sub   { font-size:12px; color:var(--text-muted); margin-top:4px; }
-    .auth-tabs  { display:flex; background:var(--bg-surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:3px; margin-bottom:24px; }
-    .auth-tab   { flex:1; text-align:center; padding:9px; font-size:13px; font-weight:500; border-radius:calc(var(--radius-md) - 1px); cursor:pointer; color:var(--text-muted); transition:all 0.15s; border:none; background:none; font-family:var(--font-sans); }
-    .auth-tab.active { background:var(--bg-card); color:var(--text-primary); box-shadow:0 1px 6px rgba(0,0,0,0.3); }
-    .auth-panel { display:none; }
-    .auth-panel.active { display:block; }
-    .msg { border-radius:var(--radius-sm); padding:10px 14px; font-size:13px; margin-bottom:14px; display:none; }
-    .msg-error   { background:rgba(244,63,94,0.1); border:1px solid rgba(244,63,94,0.2); color:#fb7185; }
-    .msg-success { background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.2); color:#34d399; }
-    .pwd-wrap  { position:relative; }
-    .pwd-wrap .form-input { padding-right:44px; }
-    .pwd-toggle { position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:var(--text-muted); font-size:15px; padding:0; transition:color 0.15s; }
-    .pwd-toggle:hover { color:var(--text-secondary); }
-    .auth-footer { text-align:center; margin-top:20px; font-size:12px; color:var(--text-muted); }
-    .auth-footer a { color:var(--accent-light); text-decoration:none; }
-    .auth-footer a:hover { text-decoration:underline; }
-    .strength-label { font-size:11px; margin-top:4px; transition:color 0.3s; }
-    .two-col { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --accent:       #6366f1;
+      --accent-light: #818cf8;
+      --accent-glow:  rgba(99,102,241,0.25);
+      --emerald:      #10b981;
+      --rose:         #f43f5e;
+      --amber:        #f59e0b;
+      --text-primary: #f1f5f9;
+      --text-muted:   #94a3b8;
+      --border:       rgba(255,255,255,0.08);
+      --card-bg:      rgba(15,17,26,0.85);
+      --input-bg:     rgba(255,255,255,0.05);
+      --input-border: rgba(255,255,255,0.1);
+      --radius:       12px;
+      --font:         'Inter', system-ui, sans-serif;
+      --font-display: 'Syne', sans-serif;
+    }
+
+    body {
+      font-family: var(--font);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #060810;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ── Arrière-plan animé ── */
+    .bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 10%, rgba(99,102,241,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 90%, rgba(16,185,129,0.12) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 40% at 60% 20%, rgba(139,92,246,0.1) 0%, transparent 50%),
+        linear-gradient(135deg, #060810 0%, #0d0f1c 50%, #070a14 100%);
+    }
+
+    .bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+    }
+
+    /* ── Orbes flottants ── */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.5;
+      animation: float 8s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .orb-1 { width:400px; height:400px; background:radial-gradient(circle,#6366f1,transparent); top:-100px; left:-100px; animation-delay:0s; }
+    .orb-2 { width:300px; height:300px; background:radial-gradient(circle,#10b981,transparent); bottom:-80px; right:-80px; animation-delay:-3s; }
+    .orb-3 { width:200px; height:200px; background:radial-gradient(circle,#8b5cf6,transparent); top:40%; left:60%; animation-delay:-5s; }
+
+    @keyframes float {
+      0%,100% { transform:translate(0,0) scale(1); }
+      33%      { transform:translate(20px,-20px) scale(1.05); }
+      66%      { transform:translate(-15px,15px) scale(0.95); }
+    }
+
+    /* ── Carte ── */
+    .card-wrap {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 460px;
+      padding: 20px;
+      max-height: 100vh;
+      overflow-y: auto;
+    }
+
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 40px 36px;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.04),
+        0 24px 60px rgba(0,0,0,0.6),
+        0 0 80px rgba(99,102,241,0.08);
+    }
+
+    /* ── Logo ── */
+    .logo-area { text-align:center; margin-bottom:32px; }
+
+    .logo-icon {
+      width:60px; height:60px;
+      background:linear-gradient(135deg,#6366f1,#8b5cf6);
+      border-radius:16px;
+      display:inline-flex; align-items:center; justify-content:center;
+      font-size:28px; margin-bottom:14px;
+      box-shadow:0 8px 32px rgba(99,102,241,0.4),0 0 0 1px rgba(255,255,255,0.1);
+      animation:pulse-logo 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse-logo {
+      0%,100% { box-shadow:0 8px 32px rgba(99,102,241,0.4),0 0 0 1px rgba(255,255,255,0.1); }
+      50%      { box-shadow:0 8px 48px rgba(99,102,241,0.6),0 0 0 1px rgba(255,255,255,0.15); }
+    }
+
+    .logo-title { font-family:var(--font-display); font-size:26px; font-weight:800; color:var(--text-primary); letter-spacing:-0.5px; }
+    .logo-sub   { font-size:13px; color:var(--text-muted); margin-top:4px; }
+
+    /* ── Onglets ── */
+    .tabs {
+      display:flex;
+      background:rgba(255,255,255,0.04);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:4px; margin-bottom:28px; gap:4px;
+    }
+
+    .tab {
+      flex:1; padding:10px; font-size:13px; font-weight:600;
+      font-family:var(--font); color:var(--text-muted);
+      background:none; border:none; border-radius:9px;
+      cursor:pointer; transition:all 0.2s ease; letter-spacing:0.2px;
+    }
+    .tab:hover { color:var(--text-primary); }
+    .tab.active {
+      background:linear-gradient(135deg,rgba(99,102,241,0.3),rgba(139,92,246,0.2));
+      color:#c7d2fe; border:1px solid rgba(99,102,241,0.3);
+      box-shadow:0 2px 12px rgba(99,102,241,0.2);
+    }
+
+    /* ── Panneaux ── */
+    .panel { display:none; }
+    .panel.active { display:block; animation:fadeIn 0.25s ease; }
+
+    @keyframes fadeIn {
+      from { opacity:0; transform:translateY(6px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    /* ── Formulaire ── */
+    .form-group { margin-bottom:16px; }
+
+    .form-label {
+      display:block; font-size:12px; font-weight:600;
+      color:var(--text-muted); text-transform:uppercase;
+      letter-spacing:0.8px; margin-bottom:8px;
+    }
+    .form-label span { color:var(--rose); }
+
+    .input-wrap { position:relative; }
+
+    .form-input {
+      width:100%;
+      background:var(--input-bg);
+      border:1px solid var(--input-border);
+      border-radius:var(--radius);
+      color:var(--text-primary);
+      font-family:var(--font); font-size:14px;
+      padding:13px 16px; outline:none;
+      transition:all 0.25s ease;
+      appearance: none;
+      -webkit-appearance:none;
+    }
+    .form-input::placeholder { color:rgba(148,163,184,0.4); }
+    .form-input:hover  { border-color:rgba(255,255,255,0.15); background:rgba(255,255,255,0.07); }
+    .form-input:focus  { border-color:rgba(99,102,241,0.7); background:rgba(99,102,241,0.06); box-shadow:0 0 0 3px rgba(99,102,241,0.15),0 2px 12px rgba(99,102,241,0.1); }
+    .form-input.valid  { border-color:rgba(16,185,129,0.6); background:rgba(16,185,129,0.04); }
+    .form-input.invalid{ border-color:rgba(244,63,94,0.6);  background:rgba(244,63,94,0.04); }
+
+    /* Icône dans input */
+    .input-icon {
+      position:absolute; left:14px; top:50%; transform:translateY(-50%);
+      font-size:15px; pointer-events:none; opacity:0.5; transition:opacity 0.2s;
+    }
+    .has-icon .form-input { padding-left:42px; }
+    .input-wrap:focus-within .input-icon { opacity:0.9; }
+
+    /* Toggle mot de passe */
+    .pwd-toggle {
+      position:absolute; right:13px; top:50%; transform:translateY(-50%);
+      background:none; border:none; cursor:pointer;
+      color:var(--text-muted); font-size:16px; padding:4px;
+      border-radius:6px; transition:all 0.15s; line-height:1;
+    }
+    .pwd-toggle:hover { color:var(--text-primary); background:rgba(255,255,255,0.08); }
+
+    /* ── Barre de force ── */
+    .strength-bar { display:flex; gap:4px; margin-top:8px; }
+    .strength-seg { flex:1; height:3px; border-radius:99px; background:rgba(255,255,255,0.08); transition:background 0.3s ease; }
+    .strength-label { font-size:11px; margin-top:4px; font-weight:500; transition:color 0.3s; }
+
+    /* ── Hints ── */
+    .field-hint { font-size:11px; color:var(--text-muted); margin-top:5px; display:flex; align-items:center; gap:4px; transition:color 0.2s; }
+
+    /* ── 2 colonnes ── */
+    .two-col { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
+    /* ── Messages ── */
+    .msg {
+      border-radius:var(--radius); padding:12px 16px; font-size:13px;
+      margin-bottom:18px; display:none; align-items:center; gap:10px;
+      font-weight:500; animation:fadeIn 0.2s ease;
+    }
+    .msg.show    { display:flex; }
+    .msg-error   { background:rgba(244,63,94,0.1);  border:1px solid rgba(244,63,94,0.25);  color:#fca5a5; }
+    .msg-success { background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.25); color:#6ee7b7; }
+    .msg-icon { font-size:16px; flex-shrink:0; }
+
+    /* ── Bouton ── */
+    .btn-primary {
+      width:100%; padding:14px; margin-top:6px;
+      background:linear-gradient(135deg,#6366f1,#8b5cf6);
+      color:white; border:none; border-radius:var(--radius);
+      font-size:15px; font-weight:700; font-family:var(--font);
+      cursor:pointer; transition:all 0.2s ease; letter-spacing:0.3px;
+      position:relative; overflow:hidden;
+      box-shadow:0 4px 20px rgba(99,102,241,0.4);
+    }
+    .btn-primary::before {
+      content:''; position:absolute; inset:0;
+      background:linear-gradient(135deg,rgba(255,255,255,0.15),transparent);
+      opacity:0; transition:opacity 0.2s;
+    }
+    .btn-primary:hover         { transform:translateY(-1px); box-shadow:0 8px 28px rgba(99,102,241,0.5); }
+    .btn-primary:hover::before { opacity:1; }
+    .btn-primary:active        { transform:translateY(0); }
+    .btn-primary:disabled      { opacity:0.6; cursor:not-allowed; transform:none; }
+
+    /* Spinner */
+    .spinner {
+      width:16px; height:16px;
+      border:2px solid rgba(255,255,255,0.3); border-top-color:white;
+      border-radius:50%; animation:spin 0.7s linear infinite;
+      display:inline-block; vertical-align:middle; margin-right:6px;
+    }
+    @keyframes spin { to { transform:rotate(360deg); } }
+
+    /* ── Footer ── */
+    .auth-footer { text-align:center; margin-top:22px; font-size:13px; color:var(--text-muted); }
+    .auth-footer a { color:#a5b4fc; text-decoration:none; font-weight:500; transition:color 0.15s; }
+    .auth-footer a:hover { color:#c7d2fe; text-decoration:underline; }
+
+    /* ── Note admin ── */
+    .admin-note {
+      background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.2);
+      border-radius:8px; padding:8px 12px; font-size:11px; color:#6ee7b7;
+      margin-bottom:18px; display:flex; align-items:center; gap:6px;
+    }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width:4px; }
+    ::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.1); border-radius:99px; }
   </style>
 </head>
 <body>
-<div class="auth-wrap">
-  <div class="auth-card">
-    <div class="auth-logo">
-      <div class="logo-big">⚡</div>
-      <div class="auth-title">SmartBacklog</div>
-      <div class="auth-sub">Assistant IA</div>
+
+<div class="bg"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<div class="card-wrap">
+  <div class="card">
+
+    <div class="logo-area">
+      <div class="logo-icon">⚡</div>
+      <div class="logo-title">SmartBacklog</div>
+      <div class="logo-sub">AI-Powered Project Management</div>
     </div>
 
-    <div class="auth-tabs">
-      <button class="auth-tab active" onclick="switchTab('login')">Connexion</button>
-      <button class="auth-tab" onclick="switchTab('register')">Créer un compte</button>
+    <div class="tabs">
+      <button class="tab active" id="tab-login"    onclick="switchTab('login')">Connexion</button>
+      <button class="tab"        id="tab-register" onclick="switchTab('register')">Créer un compte</button>
     </div>
 
-    <!-- ── CONNEXION ── -->
-    <div class="auth-panel active" id="panel-login">
-      <div class="msg msg-error"   id="login-error"></div>
-      <div class="msg msg-success" id="login-success"></div>
+    <!-- ══ CONNEXION ══ -->
+    <div class="panel active" id="panel-login">
+      <div class="msg msg-error"   id="login-error">  <span class="msg-icon">⚠️</span><span id="login-error-text"></span></div>
+      <div class="msg msg-success" id="login-success"><span class="msg-icon">✓</span> <span id="login-success-text"></span></div>
+
       <div class="form-group">
         <label class="form-label">Nom d'utilisateur</label>
-        <input type="text" class="form-input" id="login-username"
-               placeholder="votre_identifiant" autocomplete="username" />
+        <div class="input-wrap has-icon">
+          <span class="input-icon">👤</span>
+          <input type="text" class="form-input" id="login-username"
+                 placeholder="votre_identifiant" autocomplete="username" />
+        </div>
       </div>
+
       <div class="form-group">
         <label class="form-label">Mot de passe</label>
-        <div class="pwd-wrap">
+        <div class="input-wrap has-icon">
+          <span class="input-icon">🔒</span>
           <input type="password" class="form-input" id="login-password"
-                 placeholder="••••••••" autocomplete="current-password" />
+                 placeholder="••••••••" autocomplete="current-password"
+                 style="padding-right:44px;" />
           <button class="pwd-toggle" type="button" onclick="togglePwd('login-password',this)">👁</button>
         </div>
       </div>
-      <button class="btn btn-primary" style="width:100%;padding:12px;font-size:15px;margin-top:4px;"
-              onclick="login()" id="login-btn">Se connecter</button>
+
+      <button class="btn-primary" id="login-btn" onclick="login()">Se connecter</button>
+
       <div class="auth-footer">
-        Pas encore de compte ? <a href="#" onclick="switchTab('register')">Créer un compte</a>
+        Pas encore de compte ?
+        <a href="#" onclick="switchTab('register')">Créer un compte gratuit</a>
       </div>
     </div>
 
-    <!-- ── INSCRIPTION ── -->
-    <div class="auth-panel" id="panel-register">
-      <div class="msg msg-error"   id="reg-error"></div>
-      <div class="msg msg-success" id="reg-success"></div>
+    <!-- ══ INSCRIPTION ══ -->
+    <div class="panel" id="panel-register">
+      <div class="msg msg-error"   id="reg-error">  <span class="msg-icon">⚠️</span><span id="reg-error-text"></span></div>
+      <div class="msg msg-success" id="reg-success"><span class="msg-icon">✓</span> <span id="reg-success-text"></span></div>
+
+      <div class="admin-note" id="admin-note" style="display:none;">
+        🛡️ Premier compte créé → vous deviendrez <strong>administrateur</strong>
+      </div>
+
       <div class="form-group">
-        <label class="form-label">Nom d'utilisateur <span style="color:var(--rose)">*</span></label>
-        <input type="text" class="form-input" id="reg-username"
-               placeholder="mon_identifiant" autocomplete="username"
-               oninput="validateUsername()" />
+        <label class="form-label">Nom d'utilisateur <span>*</span></label>
+        <div class="input-wrap has-icon">
+          <span class="input-icon">👤</span>
+          <input type="text" class="form-input" id="reg-username"
+                 placeholder="mon_identifiant" autocomplete="username"
+                 oninput="validateUsername(this)" />
+        </div>
         <div class="field-hint" id="username-hint">3 à 20 caractères — lettres, chiffres, _</div>
       </div>
+
       <div class="two-col">
         <div class="form-group">
           <label class="form-label">Prénom</label>
-          <input type="text" class="form-input" id="reg-firstname" placeholder="Prénom" />
+          <div class="input-wrap">
+            <input type="text" class="form-input" id="reg-firstname" placeholder="Prénom" />
+          </div>
         </div>
         <div class="form-group">
           <label class="form-label">Nom</label>
-          <input type="text" class="form-input" id="reg-lastname" placeholder="Nom" />
+          <div class="input-wrap">
+            <input type="text" class="form-input" id="reg-lastname" placeholder="Nom" />
+          </div>
         </div>
       </div>
+
       <div class="form-group">
         <label class="form-label">Email</label>
-        <input type="email" class="form-input" id="reg-email"
-               placeholder="email@exemple.com" autocomplete="email" />
+        <div class="input-wrap has-icon">
+          <span class="input-icon">✉️</span>
+          <input type="email" class="form-input" id="reg-email"
+                 placeholder="email@exemple.com" autocomplete="email"
+                 oninput="validateEmail(this)" />
+        </div>
+        <div class="field-hint" id="email-hint"></div>
       </div>
+
       <div class="form-group">
-        <label class="form-label">Mot de passe <span style="color:var(--rose)">*</span></label>
-        <div class="pwd-wrap">
+        <label class="form-label">Mot de passe <span>*</span></label>
+        <div class="input-wrap has-icon">
+          <span class="input-icon">🔒</span>
           <input type="password" class="form-input" id="reg-password"
                  placeholder="Minimum 6 caractères" autocomplete="new-password"
-                 oninput="updateStrength()" />
+                 oninput="updateStrength(this); checkMatch()"
+                 style="padding-right:44px;" />
           <button class="pwd-toggle" type="button" onclick="togglePwd('reg-password',this)">👁</button>
         </div>
-        <div class="strength-bar" style="margin-top:6px;">
-          <div class="strength-fill" id="strength-fill" style="width:0;"></div>
+        <div class="strength-bar">
+          <div class="strength-seg" id="seg-1"></div>
+          <div class="strength-seg" id="seg-2"></div>
+          <div class="strength-seg" id="seg-3"></div>
+          <div class="strength-seg" id="seg-4"></div>
+          <div class="strength-seg" id="seg-5"></div>
         </div>
         <div class="strength-label" id="strength-label"></div>
       </div>
+
       <div class="form-group">
-        <label class="form-label">Confirmer le mot de passe <span style="color:var(--rose)">*</span></label>
-        <div class="pwd-wrap">
+        <label class="form-label">Confirmer le mot de passe <span>*</span></label>
+        <div class="input-wrap has-icon">
+          <span class="input-icon">🔑</span>
           <input type="password" class="form-input" id="reg-password2"
                  placeholder="••••••••" autocomplete="new-password"
-                 oninput="checkMatch()" />
+                 oninput="checkMatch()"
+                 style="padding-right:44px;" />
           <button class="pwd-toggle" type="button" onclick="togglePwd('reg-password2',this)">👁</button>
         </div>
         <div class="field-hint" id="match-hint"></div>
       </div>
-      <button class="btn btn-primary" style="width:100%;padding:12px;font-size:15px;margin-top:4px;"
-              onclick="register()" id="reg-btn">Créer mon compte</button>
+
+      <button class="btn-primary" id="reg-btn" onclick="register()">Créer mon compte</button>
+
       <div class="auth-footer">
-        Déjà un compte ? <a href="#" onclick="switchTab('login')">Se connecter</a>
+        Déjà un compte ?
+        <a href="#" onclick="switchTab('login')">Se connecter</a>
       </div>
     </div>
+
   </div>
 </div>
 
 <script>
 const API = 'http://127.0.0.1:8000';
 
+/* ── Onglets ── */
 function switchTab(tab) {
-  ['login','register'].forEach((t,i) => {
-    document.getElementById('panel-'+t).classList.toggle('active', t===tab);
-    document.querySelectorAll('.auth-tab')[i].classList.toggle('active',
-      (i===0 && tab==='login') || (i===1 && tab==='register'));
+  ['login','register'].forEach(t => {
+    document.getElementById('panel-' + t).classList.toggle('active', t === tab);
+    document.getElementById('tab-'   + t).classList.toggle('active', t === tab);
   });
-  clearAll();
+  clearMsgs();
+  if (tab === 'register') {
+    document.getElementById('admin-note').style.display = 'flex';
+  }
 }
 
-function clearAll() {
+function clearMsgs() {
   ['login-error','login-success','reg-error','reg-success'].forEach(id => {
     const el = document.getElementById(id);
-    if (el) { el.style.display='none'; el.textContent=''; }
+    if (el) el.classList.remove('show');
   });
 }
 
-function showMsg(id, text) {
-  const el = document.getElementById(id);
-  el.textContent = text; el.style.display = 'block';
+function showMsg(wrapperId, textId, text) {
+  const wrap = document.getElementById(wrapperId);
+  const txt  = document.getElementById(textId);
+  if (wrap && txt) { txt.textContent = text; wrap.classList.add('show'); }
 }
 
+/* ── Toggle mot de passe ── */
 function togglePwd(id, btn) {
   const el = document.getElementById(id);
   el.type = el.type === 'password' ? 'text' : 'password';
   btn.textContent = el.type === 'password' ? '👁' : '🙈';
 }
 
-function validateUsername() {
-  const val  = document.getElementById('reg-username').value;
+/* ── Validation username ── */
+function validateUsername(input) {
+  const val  = input.value;
   const hint = document.getElementById('username-hint');
-  const inp  = document.getElementById('reg-username');
   const ok   = /^[a-zA-Z0-9_]{3,20}$/.test(val);
-  if (!val) { hint.style.color=''; inp.className='form-input'; return; }
-  hint.style.color = ok ? '#10b981' : '#f43f5e';
-  hint.textContent = ok ? '✓ Nom d\'utilisateur valide' : '✗ 3-20 caractères, lettres/chiffres/_ uniquement';
-  inp.className    = 'form-input ' + (ok ? 'input-valid' : 'input-invalid');
+  if (!val) {
+    input.className  = 'form-input';
+    hint.textContent = '3 à 20 caractères — lettres, chiffres, _';
+    hint.style.color = '';
+    return;
+  }
+  input.className  = 'form-input ' + (ok ? 'valid' : 'invalid');
+  hint.textContent = ok ? '✓ Identifiant valide' : '✗ 3-20 caractères, lettres/chiffres/_ uniquement';
+  hint.style.color = ok ? '#6ee7b7' : '#fca5a5';
 }
 
-function updateStrength() {
-  const pwd   = document.getElementById('reg-password').value;
-  const fill  = document.getElementById('strength-fill');
-  const label = document.getElementById('strength-label');
-  let score = 0;
+/* ── Validation email ── */
+function validateEmail(input) {
+  const val  = input.value;
+  const hint = document.getElementById('email-hint');
+  if (!val) { input.className='form-input'; hint.textContent=''; return; }
+  const ok   = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+  input.className  = 'form-input ' + (ok ? 'valid' : 'invalid');
+  hint.textContent = ok ? '✓ Email valide' : '✗ Format invalide';
+  hint.style.color = ok ? '#6ee7b7' : '#fca5a5';
+}
+
+/* ── Force du mot de passe ── */
+function updateStrength(input) {
+  const pwd  = input.value;
+  const segs = [1,2,3,4,5].map(i => document.getElementById('seg-' + i));
+  const lbl  = document.getElementById('strength-label');
+  let score  = 0;
   if (pwd.length >= 6)           score++;
   if (pwd.length >= 10)          score++;
-  if (/[A-Z]/.test(pwd))        score++;
-  if (/[0-9]/.test(pwd))        score++;
-  if (/[^a-zA-Z0-9]/.test(pwd)) score++;
-  const levels = [
-    {pct:'0',   color:'transparent', text:''},
-    {pct:'20',  color:'#f43f5e',     text:'Très faible'},
-    {pct:'40',  color:'#f59e0b',     text:'Faible'},
-    {pct:'60',  color:'#f59e0b',     text:'Moyen'},
-    {pct:'80',  color:'#6366f1',     text:'Fort'},
-    {pct:'100', color:'#10b981',     text:'Très fort'},
-  ];
-  const lvl = levels[Math.min(score, 5)];
-  fill.style.width      = lvl.pct + '%';
-  fill.style.background = lvl.color;
-  label.textContent     = lvl.text;
-  label.style.color     = lvl.color;
+  if (/[A-Z]/.test(pwd))         score++;
+  if (/[0-9]/.test(pwd))         score++;
+  if (/[^a-zA-Z0-9]/.test(pwd))  score++;
+  const colors = ['#f43f5e','#f43f5e','#f59e0b','#6366f1','#10b981'];
+  const labels = ['','Très faible','Faible','Moyen','Fort','Très fort'];
+  segs.forEach((seg, i) => {
+    seg.style.background = i < score ? colors[score - 1] : 'rgba(255,255,255,0.08)';
+  });
+  lbl.textContent = labels[score] || '';
+  lbl.style.color = colors[score - 1] || '';
 }
 
+/* ── Correspondance mots de passe ── */
 function checkMatch() {
   const p1   = document.getElementById('reg-password').value;
   const p2   = document.getElementById('reg-password2').value;
   const hint = document.getElementById('match-hint');
-  if (!p2) { hint.textContent=''; return; }
-  if (p1 === p2) { hint.textContent='✓ Les mots de passe correspondent'; hint.style.color='#10b981'; }
-  else           { hint.textContent='✗ Ne correspondent pas'; hint.style.color='#f43f5e'; }
+  const inp2 = document.getElementById('reg-password2');
+  if (!p2) { hint.textContent=''; inp2.className='form-input'; return; }
+  const ok   = p1 === p2;
+  inp2.className   = 'form-input ' + (ok ? 'valid' : 'invalid');
+  hint.textContent = ok ? '✓ Les mots de passe correspondent' : '✗ Ne correspondent pas';
+  hint.style.color = ok ? '#6ee7b7' : '#fca5a5';
 }
 
+/* ── Touche Entrée ── */
 document.addEventListener('keydown', e => {
   if (e.key !== 'Enter') return;
-  const active = document.querySelector('.auth-panel.active').id;
+  const active = document.querySelector('.panel.active').id;
   if (active === 'panel-login') login(); else register();
 });
 
+/* ══ CONNEXION ══ */
 async function login() {
-  clearAll();
+  clearMsgs();
   const username = document.getElementById('login-username').value.trim();
   const password = document.getElementById('login-password').value;
   const btn      = document.getElementById('login-btn');
-  if (!username || !password) { showMsg('login-error','Veuillez remplir tous les champs.'); return; }
-  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Connexion...';
+  if (!username || !password) {
+    showMsg('login-error','login-error-text','Veuillez remplir tous les champs.');
+    return;
+  }
+  btn.disabled  = true;
+  btn.innerHTML = '<span class="spinner"></span> Connexion en cours...';
   try {
     const res  = await fetch(`${API}/auth/login`, {
-      method: 'POST', body: new URLSearchParams({username, password})
+      method: 'POST',
+      body:   new URLSearchParams({ username, password }),
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.detail || 'Identifiants incorrects.');
     localStorage.setItem('token', data.access_token);
-    localStorage.setItem('user', JSON.stringify({username: data.username, role: data.role}));
-    window.location.href = 'index.html';
-  } catch(e) {
-    showMsg('login-error', e.message);
-    btn.disabled = false; btn.textContent = 'Se connecter';
+    localStorage.setItem('user', JSON.stringify({ username: data.username, role: data.role }));
+    showMsg('login-success','login-success-text','Connexion réussie ! Redirection...');
+    setTimeout(() => { window.location.href = 'index.html'; }, 800);
+  } catch (e) {
+    const msg = e.message.includes('Failed to fetch')
+      ? 'Serveur inaccessible — lancez : cd Backend && py -m uvicorn main:app --reload'
+      : e.message;
+    showMsg('login-error','login-error-text', msg);
+    btn.disabled  = false;
+    btn.textContent = 'Se connecter';
   }
 }
 
+/* ══ INSCRIPTION ══ */
 async function register() {
-  clearAll();
+  clearMsgs();
   const username  = document.getElementById('reg-username').value.trim();
   const firstname = document.getElementById('reg-firstname').value.trim();
   const lastname  = document.getElementById('reg-lastname').value.trim();
@@ -241,34 +559,52 @@ async function register() {
   const password2 = document.getElementById('reg-password2').value;
   const btn       = document.getElementById('reg-btn');
 
-  if (!username || !password)   { showMsg('reg-error','Le nom d\'utilisateur et le mot de passe sont obligatoires.'); return; }
-  if (!/^[a-zA-Z0-9_]{3,20}$/.test(username)) { showMsg('reg-error','Nom d\'utilisateur invalide (3-20 caractères, lettres/chiffres/_).'); return; }
-  if (password.length < 6)      { showMsg('reg-error','Le mot de passe doit contenir au moins 6 caractères.'); return; }
-  if (password !== password2)   { showMsg('reg-error','Les mots de passe ne correspondent pas.'); return; }
+  if (!username || !password) {
+    showMsg('reg-error','reg-error-text','Le nom d\'utilisateur et le mot de passe sont obligatoires.');
+    return;
+  }
+  if (!/^[a-zA-Z0-9_]{3,20}$/.test(username)) {
+    showMsg('reg-error','reg-error-text','Nom d\'utilisateur invalide (3-20 caractères, lettres/chiffres/_).');
+    return;
+  }
+  if (password.length < 6) {
+    showMsg('reg-error','reg-error-text','Le mot de passe doit contenir au moins 6 caractères.');
+    return;
+  }
+  if (password !== password2) {
+    showMsg('reg-error','reg-error-text','Les mots de passe ne correspondent pas.');
+    return;
+  }
 
   const full_name = [firstname, lastname].filter(Boolean).join(' ') || username;
-  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Création en cours...';
+  btn.disabled  = true;
+  btn.innerHTML = '<span class="spinner"></span> Création du compte...';
 
   try {
     const res  = await fetch(`${API}/auth/register`, {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({username, password, full_name, email}),
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ username, password, full_name, email }),
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.detail || 'Erreur lors de la création du compte.');
     const isAdmin = data.role === 'admin';
-    showMsg('reg-success',
-      `✓ Compte créé !${isAdmin ? ' Vous êtes le premier utilisateur et devenez administrateur.' : ''} Redirection...`
+    showMsg('reg-success','reg-success-text',
+      `Compte créé avec succès !${isAdmin ? ' 🛡️ Vous êtes administrateur.' : ''} Redirection...`
     );
     setTimeout(() => {
       document.getElementById('login-username').value = username;
       switchTab('login');
-    }, 2000);
-  } catch(e) {
-    showMsg('reg-error', e.message);
+      showMsg('login-success','login-success-text','Compte créé ! Entrez votre mot de passe pour vous connecter.');
+    }, 2200);
+  } catch (e) {
+    const msg = e.message.includes('Failed to fetch')
+      ? 'Serveur inaccessible — lancez : cd Backend && py -m uvicorn main:app --reload'
+      : e.message;
+    showMsg('reg-error','reg-error-text', msg);
+    btn.disabled    = false;
+    btn.textContent = 'Créer mon compte';
   }
-  btn.disabled = false; btn.textContent = 'Créer mon compte';
 }
 </script>
 </body>
