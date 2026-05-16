@@ -4,802 +4,306 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SmartBacklog — Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
   <style>
-  /* ============================================
-   SMARTBACKLOG — Design System
-============================================ */
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@600;700;800&display=swap');
-
-:root {
-  --bg-base:        #0a0b0f;
-  --bg-surface:     #11131a;
-  --bg-card:        #161924;
-  --bg-card-hover:  #1c2030;
-  --bg-input:       #1e2130;
-
-  --border:         rgba(255,255,255,0.06);
-  --border-focus:   rgba(99,102,241,0.6);
-
-  --accent:         #6366f1;
-  --accent-light:   #818cf8;
-  --accent-glow:    rgba(99,102,241,0.15);
-  --emerald:        #10b981;
-  --emerald-glow:   rgba(16,185,129,0.15);
-  --amber:          #f59e0b;
-  --rose:           #f43f5e;
-
-  --text-primary:   #f1f5f9;
-  --text-secondary: #94a3b8;
-  --text-muted:     #475569;
-
-  --radius-sm:  6px;
-  --radius-md:  12px;
-  --radius-lg:  18px;
-  --radius-xl:  24px;
-
-  --shadow-card: 0 4px 24px rgba(0,0,0,0.4);
-  --shadow-glow: 0 0 40px rgba(99,102,241,0.12);
-
-  --font-sans:    'Inter', system-ui, sans-serif;
-  --font-display: 'Syne', sans-serif;
-
-  --sidebar-w: 260px;
-  --header-h:  64px;
-}
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  font-family: var(--font-sans);
-  background: var(--bg-base);
-  color: var(--text-primary);
-  min-height: 100vh;
-  overflow-x: hidden;
-  line-height: 1.6;
-}
-
-/* ── Scrollbar ── */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
-
-/* ─────────────────────────────
-   LAYOUT
-───────────────────────────── */
-.app-shell {
-  display: grid;
-  grid-template-columns: var(--sidebar-w) 1fr;
-  grid-template-rows: var(--header-h) 1fr;
-  min-height: 100vh;
-}
-
-/* ── Sidebar ── */
-.sidebar {
-  grid-row: 1 / -1;
-  background: var(--bg-surface);
-  border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  padding: 0;
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  overflow-y: auto;
-}
-
-.sidebar-logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 20px 24px;
-  border-bottom: 1px solid var(--border);
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text-primary);
-  text-decoration: none;
-}
-
-.logo-icon {
-  width: 34px; height: 34px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-light));
-  border-radius: var(--radius-sm);
-  display: grid;
-  place-items: center;
-  font-size: 16px;
-  flex-shrink: 0;
-}
-
-.sidebar-section {
-  padding: 20px 12px 8px;
-}
-
-.sidebar-section-label {
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1.2px;
-  color: var(--text-muted);
-  padding: 0 12px;
-  margin-bottom: 6px;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 9px 12px;
-  border-radius: var(--radius-sm);
-  color: var(--text-secondary);
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.15s ease;
-  cursor: pointer;
-  border: none;
-  background: none;
-  width: 100%;
-  text-align: left;
-}
-
-.nav-item:hover {
-  background: var(--accent-glow);
-  color: var(--text-primary);
-}
-
-.nav-item.active {
-  background: var(--accent-glow);
-  color: var(--accent-light);
-}
-
-.nav-icon {
-  width: 18px; height: 18px;
-  opacity: 0.7;
-  flex-shrink: 0;
-}
-
-.nav-badge {
-  margin-left: auto;
-  background: var(--accent);
-  color: white;
-  font-size: 10px;
-  font-weight: 600;
-  padding: 2px 7px;
-  border-radius: 99px;
-}
-
-.sidebar-footer {
-  margin-top: auto;
-  padding: 16px 12px;
-  border-top: 1px solid var(--border);
-}
-
-.user-chip {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 12px;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.user-chip:hover { background: var(--bg-card); }
-
-.avatar {
-  width: 32px; height: 32px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent), var(--emerald));
-  display: grid;
-  place-items: center;
-  font-size: 12px;
-  font-weight: 700;
-  color: white;
-  flex-shrink: 0;
-}
-
-.user-info { flex: 1; min-width: 0; }
-.user-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
-.user-role { font-size: 11px; color: var(--text-muted); }
-
-/* ── Header ── */
-.header {
-  background: var(--bg-surface);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  padding: 0 28px;
-  gap: 16px;
-}
-
-.header-title {
-  font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 700;
-}
-
-.header-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
-
-/* ── Main ── */
-.main-content {
-  padding: 28px;
-  overflow-y: auto;
-  background: var(--bg-base);
-}
-
-/* ─────────────────────────────
-   COMPONENTS
-───────────────────────────── */
-
-/* Cards */
-.card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 24px;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.card:hover { border-color: rgba(255,255,255,0.1); }
-.card-glow { box-shadow: var(--shadow-glow); }
-
-/* Stat cards */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-  margin-bottom: 28px;
-}
-
-.stat-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 20px 24px;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.2s;
-}
-
-.stat-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-}
-
-.stat-card.accent::before  { background: var(--accent); }
-.stat-card.emerald::before { background: var(--emerald); }
-.stat-card.amber::before   { background: var(--amber); }
-.stat-card.rose::before    { background: var(--rose); }
-
-.stat-card:hover { border-color: rgba(255,255,255,0.1); transform: translateY(-1px); }
-
-.stat-label {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  margin-bottom: 10px;
-}
-
-.stat-value {
-  font-family: var(--font-display);
-  font-size: 32px;
-  font-weight: 700;
-  line-height: 1;
-  margin-bottom: 8px;
-}
-
-.stat-trend {
-  font-size: 12px;
-  color: var(--text-muted);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.trend-up   { color: var(--emerald); }
-.trend-down { color: var(--rose); }
-
-/* Buttons */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 9px 18px;
-  border-radius: var(--radius-sm);
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.15s;
-  border: none;
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-.btn-primary {
-  background: var(--accent);
-  color: white;
-}
-.btn-primary:hover { background: var(--accent-light); }
-
-.btn-ghost {
-  background: transparent;
-  color: var(--text-secondary);
-  border: 1px solid var(--border);
-}
-.btn-ghost:hover { background: var(--bg-card); color: var(--text-primary); }
-
-.btn-danger {
-  background: rgba(244,63,94,0.15);
-  color: var(--rose);
-  border: 1px solid rgba(244,63,94,0.2);
-}
-.btn-danger:hover { background: rgba(244,63,94,0.25); }
-
-.btn-sm { padding: 6px 12px; font-size: 12px; }
-.btn-icon { padding: 8px; border-radius: var(--radius-sm); }
-
-/* Badges */
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 3px 10px;
-  border-radius: 99px;
-  font-size: 11px;
-  font-weight: 600;
-}
-
-.badge-high   { background: rgba(244,63,94,0.15);  color: #fb7185; }
-.badge-medium { background: rgba(245,158,11,0.15); color: #fbbf24; }
-.badge-low    { background: rgba(16,185,129,0.15); color: #34d399; }
-.badge-done   { background: rgba(99,102,241,0.15); color: #a5b4fc; }
-.badge-ai     { background: rgba(139,92,246,0.15); color: #c4b5fd; }
-
-/* Forms */
-.form-group { margin-bottom: 18px; }
-.form-label {
-  display: block;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  margin-bottom: 6px;
-}
-
-.form-input, .form-select, .form-textarea {
-  width: 100%;
-  background: var(--bg-input);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  color: var(--text-primary);
-  font-family: var(--font-sans);
-  font-size: 14px;
-  padding: 10px 14px;
-  transition: border-color 0.15s, box-shadow 0.15s;
-  outline: none;
-}
-
-.form-input:focus, .form-select:focus, .form-textarea:focus {
-  border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px var(--accent-glow);
-}
-
-.form-textarea { resize: vertical; min-height: 80px; }
-
-/* Kanban Board */
-.kanban {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  align-items: start;
-}
-
-.kanban-col {
-  background: var(--bg-surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 16px;
-  min-height: 400px;
-}
-
-.kanban-col-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 16px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-secondary);
-}
-
-.col-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-}
-
-.col-count {
-  margin-left: auto;
-  font-size: 11px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  color: var(--text-muted);
-  padding: 1px 8px;
-  border-radius: 99px;
-}
-
-.task-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 14px 16px;
-  margin-bottom: 10px;
-  cursor: grab;
-  transition: all 0.15s;
-  position: relative;
-}
-
-.task-card:hover {
-  border-color: rgba(255,255,255,0.12);
-  transform: translateY(-1px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-}
-
-.task-card.dragging {
-  opacity: 0.5;
-  cursor: grabbing;
-}
-
-.task-title {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text-primary);
-  margin-bottom: 8px;
-  line-height: 1.4;
-}
-
-.task-meta {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-top: 10px;
-}
-
-.task-ai-score {
-  position: absolute;
-  top: 12px; right: 12px;
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--accent-light);
-  background: var(--accent-glow);
-  padding: 2px 6px;
-  border-radius: 4px;
-}
-
-/* Progress bar */
-.progress-bar {
-  height: 4px;
-  background: var(--border);
-  border-radius: 99px;
-  overflow: hidden;
-  margin-top: 8px;
-}
-
-.progress-fill {
-  height: 100%;
-  border-radius: 99px;
-  background: var(--accent);
-  transition: width 0.4s ease;
-}
-
-.progress-fill.emerald { background: var(--emerald); }
-.progress-fill.amber   { background: var(--amber); }
-.progress-fill.rose    { background: var(--rose); }
-
-/* Modal */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.7);
-  backdrop-filter: blur(4px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s;
-}
-
-.modal-overlay.open {
-  opacity: 1;
-  pointer-events: all;
-}
-
-.modal {
-  background: var(--bg-card);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: var(--radius-xl);
-  padding: 28px;
-  width: 100%;
-  max-width: 520px;
-  transform: translateY(10px) scale(0.98);
-  transition: transform 0.2s;
-}
-
-.modal-overlay.open .modal { transform: translateY(0) scale(1); }
-
-.modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 24px;
-}
-
-.modal-title { font-family: var(--font-display); font-size: 20px; font-weight: 700; }
-
-/* AI Panel */
-.ai-panel {
-  background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.05));
-  border: 1px solid rgba(99,102,241,0.2);
-  border-radius: var(--radius-lg);
-  padding: 20px;
-  margin-top: 20px;
-}
-
-.ai-panel-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--accent-light);
-  margin-bottom: 12px;
-}
-
-.ai-result {
-  font-size: 13px;
-  color: var(--text-secondary);
-  line-height: 1.7;
-  white-space: pre-wrap;
-}
-
-/* Toast notifications */
-.toast-container {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  z-index: 9999;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.toast {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 12px 18px;
-  font-size: 14px;
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  transform: translateX(110%);
-  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
-  min-width: 280px;
-  box-shadow: var(--shadow-card);
-}
-
-.toast.show { transform: translateX(0); }
-.toast.success { border-left: 3px solid var(--emerald); }
-.toast.error   { border-left: 3px solid var(--rose); }
-.toast.info    { border-left: 3px solid var(--accent); }
-
-/* Search bar */
-.search-bar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--bg-input);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 8px 14px;
-  font-size: 14px;
-  color: var(--text-secondary);
-  cursor: text;
-  transition: border-color 0.15s;
-}
-
-.search-bar:focus-within {
-  border-color: var(--border-focus);
-  color: var(--text-primary);
-}
-
-.search-bar input {
-  background: none;
-  border: none;
-  outline: none;
-  color: var(--text-primary);
-  font-size: 14px;
-  width: 200px;
-}
-
-/* Loader / Spinner */
-.spinner {
-  width: 18px; height: 18px;
-  border: 2px solid var(--border);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-}
-
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* Skeleton loader */
-.skeleton {
-  background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-card-hover) 50%, var(--bg-card) 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.2s infinite;
-  border-radius: var(--radius-sm);
-}
-
-@keyframes shimmer {
-  from { background-position: 200% center; }
-  to   { background-position: -200% center; }
-}
-
-/* Empty state */
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 24px;
-  text-align: center;
-  color: var(--text-muted);
-}
-
-.empty-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
-.empty-title { font-size: 16px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; }
-.empty-desc  { font-size: 14px; }
-
-/* Tabs */
-.tabs { display: flex; gap: 4px; background: var(--bg-surface); padding: 4px; border-radius: var(--radius-md); border: 1px solid var(--border); width: fit-content; margin-bottom: 24px; }
-.tab { padding: 7px 16px; border-radius: calc(var(--radius-md) - 2px); font-size: 13px; font-weight: 500; color: var(--text-muted); cursor: pointer; transition: all 0.15s; border: none; background: none; }
-.tab.active { background: var(--bg-card); color: var(--text-primary); }
-
-/* Divider */
-.divider { height: 1px; background: var(--border); margin: 20px 0; }
-
-/* Responsive */
-@media (max-width: 900px) {
-  .app-shell { grid-template-columns: 1fr; }
-  .sidebar { display: none; }
-  .kanban { grid-template-columns: 1fr; }
-}
-</style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #07090f;
+      --bg2:     #0e1018;
+      --bg3:     #141720;
+      --bg4:     #1a1e2a;
+      --border:  rgba(255,255,255,0.06);
+      --border2: rgba(255,255,255,0.1);
+      --accent:  #6366f1;
+      --accent2: #818cf8;
+      --accent3: rgba(99,102,241,0.15);
+      --emerald: #10b981;
+      --amber:   #f59e0b;
+      --rose:    #f43f5e;
+      --violet:  #8b5cf6;
+      --text:    #f1f5f9;
+      --text2:   #94a3b8;
+      --text3:   #475569;
+      --sw:      240px;
+      --hh:      60px;
+      --r:       10px;
+      --r2:      16px;
+      --font:    'Inter', system-ui, sans-serif;
+      --fontd:   'Syne', sans-serif;
+    }
+
+    body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 99px; }
+
+    /* LAYOUT */
+    .shell { display: grid; grid-template-columns: var(--sw) 1fr; grid-template-rows: var(--hh) 1fr; min-height: 100vh; }
+
+    /* SIDEBAR */
+    .sidebar { grid-row: 1/-1; background: var(--bg2); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .s-logo { display: flex; align-items: center; gap: 10px; padding: 18px 20px; border-bottom: 1px solid var(--border); text-decoration: none; }
+    .s-gem { width: 32px; height: 32px; background: linear-gradient(135deg, var(--accent), var(--violet)); border-radius: 8px; display: grid; place-items: center; font-size: 15px; flex-shrink: 0; box-shadow: 0 4px 12px rgba(99,102,241,0.35); }
+    .s-title { font-family: var(--fontd); font-size: 16px; font-weight: 800; color: var(--text); }
+    .s-section { padding: 16px 10px 6px; }
+    .s-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text3); padding: 0 10px; margin-bottom: 4px; }
+    .nav-item { display: flex; align-items: center; gap: 9px; padding: 8px 10px; border-radius: var(--r); color: var(--text3); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s; border: none; background: none; width: 100%; text-align: left; font-family: var(--font); }
+    .nav-item svg { width: 15px; height: 15px; flex-shrink: 0; }
+    .nav-item:hover { background: rgba(99,102,241,0.08); color: var(--text2); }
+    .nav-item.active { background: linear-gradient(90deg, rgba(99,102,241,0.18), rgba(99,102,241,0.05)); color: var(--accent2); border-left: 2px solid var(--accent); }
+    .nav-badge { margin-left: auto; background: var(--accent); color: white; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 99px; min-width: 18px; text-align: center; }
+    .s-bottom { margin-top: auto; padding: 12px 10px; border-top: 1px solid var(--border); }
+    .u-chip { display: flex; align-items: center; gap: 9px; padding: 8px 10px; border-radius: var(--r); cursor: pointer; transition: background 0.15s; }
+    .u-chip:hover { background: var(--bg3); }
+    .avatar { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--emerald)); display: grid; place-items: center; font-size: 11px; font-weight: 700; color: white; flex-shrink: 0; }
+    .u-name { font-size: 12px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .u-role { font-size: 10px; color: var(--text3); }
+
+    /* HEADER */
+    .header { background: rgba(14,16,24,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 24px; gap: 14px; position: sticky; top: 0; z-index: 100; }
+    .h-title { font-family: var(--fontd); font-size: 18px; font-weight: 800; background: linear-gradient(90deg,#f1f5f9,#94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .h-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+    .searchbox { display: flex; align-items: center; gap: 8px; background: var(--bg3); border: 1px solid var(--border); border-radius: var(--r); padding: 7px 12px; transition: border-color 0.2s; }
+    .searchbox:focus-within { border-color: rgba(99,102,241,0.4); }
+    .searchbox svg { width: 13px; height: 13px; color: var(--text3); flex-shrink: 0; }
+    .searchbox input { background: none; border: none; outline: none; color: var(--text); font-size: 13px; width: 170px; font-family: var(--font); }
+    .searchbox input::placeholder { color: var(--text3); }
+
+    /* BUTTONS */
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--r); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; border: none; font-family: var(--font); white-space: nowrap; }
+    .btn svg { width: 13px; height: 13px; }
+    .btn-primary { background: linear-gradient(135deg, var(--accent), var(--violet)); color: white; box-shadow: 0 4px 14px rgba(99,102,241,0.35); }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(99,102,241,0.45); }
+    .btn-ghost { background: transparent; color: var(--text2); border: 1px solid var(--border); }
+    .btn-ghost:hover { background: var(--bg3); color: var(--text); border-color: var(--border2); }
+    .btn-danger { background: rgba(244,63,94,0.12); color: var(--rose); border: 1px solid rgba(244,63,94,0.2); }
+    .btn-danger:hover { background: rgba(244,63,94,0.22); }
+    .btn-sm { padding: 5px 10px; font-size: 11px; }
+    .btn-icon { padding: 7px; }
+
+    /* MAIN */
+    .main { padding: 24px; overflow-y: auto; background: var(--bg); background-image: radial-gradient(ellipse 60% 40% at 80% 0%, rgba(99,102,241,0.06) 0%,transparent 60%), radial-gradient(ellipse 40% 30% at 0% 100%, rgba(16,185,129,0.04) 0%,transparent 60%); }
+
+    /* CARDS */
+    .card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r2); padding: 20px; transition: border-color 0.2s; }
+    .card:hover { border-color: rgba(255,255,255,0.09); }
+    .card-glow { box-shadow: 0 0 40px rgba(99,102,241,0.07); }
+    .card-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
+
+    /* STATS */
+    .stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 24px; }
+    .stat { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r2); padding: 18px 20px; position: relative; overflow: hidden; transition: all 0.2s; cursor: default; }
+    .stat::before { content:''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--c); }
+    .stat::after { content:''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--c) 0%,transparent 100%); opacity: 0.04; pointer-events: none; }
+    .stat:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.1); }
+    .stat-ico { font-size: 20px; margin-bottom: 12px; }
+    .stat-val { font-family: var(--fontd); font-size: 28px; font-weight: 800; line-height: 1; margin-bottom: 4px; color: var(--c); }
+    .stat-lbl { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.6px; }
+    .stat-sub { font-size: 11px; color: var(--text3); margin-top: 4px; }
+
+    /* BADGES */
+    .badge { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 99px; font-size: 10px; font-weight: 700; }
+    .badge-high   { background: rgba(244,63,94,0.15);  color: #fb7185; }
+    .badge-medium { background: rgba(245,158,11,0.15); color: #fbbf24; }
+    .badge-low    { background: rgba(16,185,129,0.15); color: #34d399; }
+    .badge-done   { background: var(--accent3); color: var(--accent2); }
+    .badge-ai     { background: rgba(139,92,246,0.15); color: #c4b5fd; }
+
+    /* FORM */
+    .fg { margin-bottom: 15px; }
+    .fl { display: block; font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 6px; }
+    .fl span { color: var(--rose); }
+    .fi, .fs, .ft { width: 100%; background: var(--bg3); border: 1px solid var(--border); border-radius: var(--r); color: var(--text); font-family: var(--font); font-size: 13px; padding: 10px 13px; outline: none; transition: all 0.2s; }
+    .fi::placeholder { color: var(--text3); }
+    .fi:hover, .fs:hover, .ft:hover { border-color: rgba(255,255,255,0.12); background: var(--bg4); }
+    .fi:focus, .fs:focus, .ft:focus { border-color: rgba(99,102,241,0.5); background: rgba(99,102,241,0.05); box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
+    .fs { appearance: none; }
+    .fs option { background: var(--bg3); }
+    .ft { resize: vertical; min-height: 72px; }
+    .two-fi { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    /* TABS */
+    .tabs { display: flex; gap: 3px; background: var(--bg2); padding: 3px; border-radius: var(--r); border: 1px solid var(--border); width: fit-content; margin-bottom: 20px; }
+    .tab { padding: 6px 14px; border-radius: calc(var(--r) - 1px); font-size: 12px; font-weight: 600; color: var(--text3); cursor: pointer; transition: all 0.15s; border: none; background: none; font-family: var(--font); }
+    .tab.active { background: var(--bg4); color: var(--text); }
+
+    /* PROGRESS */
+    .prog-row { margin-bottom: 14px; }
+    .prog-head { display: flex; justify-content: space-between; font-size: 11px; color: var(--text3); margin-bottom: 5px; }
+    .prog-track { height: 5px; background: rgba(255,255,255,0.06); border-radius: 99px; overflow: hidden; }
+    .prog-fill { height: 100%; border-radius: 99px; transition: width 0.5s ease; }
+
+    /* KANBAN */
+    .kanban { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; align-items: start; }
+    .k-col { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r2); padding: 14px; min-height: 420px; transition: border-color 0.2s; }
+    .k-col.drag-over { border-color: var(--accent); background: rgba(99,102,241,0.03); }
+    .k-head { display: flex; align-items: center; gap: 7px; font-size: 11px; font-weight: 700; color: var(--text2); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .k-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .k-cnt { margin-left: auto; font-size: 10px; background: var(--bg4); border: 1px solid var(--border); color: var(--text3); padding: 1px 7px; border-radius: 99px; }
+    .tcard { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--r); padding: 12px 14px; margin-bottom: 8px; cursor: grab; transition: all 0.15s; position: relative; }
+    .tcard:hover { border-color: rgba(255,255,255,0.1); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
+    .tcard.dragging { opacity: 0.4; cursor: grabbing; }
+    .tcard-title { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 5px; line-height: 1.4; }
+    .tcard-desc { font-size: 11px; color: var(--text3); margin-bottom: 9px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .tcard-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .tcard-acts { margin-left: auto; display: flex; gap: 4px; }
+    .tcard-ai { position: absolute; top: 9px; right: 9px; font-size: 9px; font-weight: 700; color: var(--accent2); background: var(--accent3); padding: 1px 5px; border-radius: 4px; }
+
+    /* RECENT */
+    .r-item { display: flex; align-items: center; gap: 11px; padding: 8px 6px; border-bottom: 1px solid var(--border); border-radius: 6px; transition: background 0.15s; }
+    .r-item:hover { background: rgba(255,255,255,0.02); }
+    .r-item:last-child { border-bottom: none; }
+    .r-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .r-info { flex: 1; min-width: 0; }
+    .r-title { font-size: 13px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .r-sub { font-size: 11px; color: var(--text3); margin-top: 1px; }
+
+    /* AI PANEL */
+    .ai-panel { background: linear-gradient(135deg,rgba(99,102,241,0.07),rgba(139,92,246,0.04)); border: 1px solid rgba(99,102,241,0.18); border-radius: var(--r2); padding: 16px; margin-top: 16px; }
+    .ai-head { display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: var(--accent2); margin-bottom: 10px; }
+    .ai-result { font-size: 12px; color: var(--text2); line-height: 1.7; white-space: pre-wrap; }
+
+    /* MODAL */
+    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+    .overlay.open { opacity: 1; pointer-events: all; }
+    .modal { background: var(--bg2); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 26px; width: 100%; max-width: 500px; transform: translateY(8px) scale(0.98); transition: transform 0.2s; max-height: 90vh; overflow-y: auto; }
+    .overlay.open .modal { transform: translateY(0) scale(1); }
+    .m-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .m-title { font-family: var(--fontd); font-size: 18px; font-weight: 800; }
+
+    /* TOAST */
+    .toasts { position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
+    .toast { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--r); padding: 11px 16px; font-size: 13px; display: flex; align-items: center; gap: 9px; transform: translateX(120%); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); min-width: 260px; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+    .toast.show { transform: translateX(0); }
+    .toast.success { border-left: 3px solid var(--emerald); }
+    .toast.error   { border-left: 3px solid var(--rose); }
+    .toast.info    { border-left: 3px solid var(--accent); }
+
+    /* SPINNER */
+    .spin { width: 15px; height: 15px; border: 2px solid rgba(255,255,255,0.2); border-top-color: white; border-radius: 50%; animation: spinning 0.65s linear infinite; display: inline-block; vertical-align: middle; margin-right: 5px; }
+    @keyframes spinning { to { transform: rotate(360deg); } }
+
+    /* EMPTY */
+    .empty { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; text-align: center; color: var(--text3); }
+    .empty-ico { font-size: 36px; margin-bottom: 12px; opacity: 0.4; }
+    .empty-ttl { font-size: 14px; font-weight: 600; color: var(--text2); margin-bottom: 4px; }
+
+    /* SETTINGS */
+    .urow { display: flex; align-items: center; gap: 11px; padding: 11px 0; border-bottom: 1px solid var(--border); }
+    .urow:last-child { border-bottom: none; }
+    .pill-admin  { background: var(--accent3); color: var(--accent2); padding: 2px 8px; border-radius: 99px; font-size: 10px; font-weight: 700; }
+    .pill-member { background: rgba(255,255,255,0.06); color: var(--text3); padding: 2px 8px; border-radius: 99px; font-size: 10px; font-weight: 700; }
+    .danger-zone { background: rgba(244,63,94,0.04); border: 1px solid rgba(244,63,94,0.12); border-radius: var(--r2); padding: 18px; }
+  </style>
 </head>
 <body>
 
-<div class="app-shell">
+<div class="shell">
 
-  <!-- ══ SIDEBAR ══ -->
+  <!-- SIDEBAR -->
   <aside class="sidebar">
-    <a class="sidebar-logo" href="#">
-      <div class="logo-icon">⚡</div>
-      SmartBacklog
+    <a class="s-logo" href="#">
+      <div class="s-gem">⚡</div>
+      <span class="s-title">SmartBacklog</span>
     </a>
-    <div class="sidebar-section">
-      <div class="sidebar-section-label">Navigation</div>
-      <button class="nav-item active" onclick="showView('dashboard', this)">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+
+    <div class="s-section">
+      <div class="s-label">Navigation</div>
+      <button class="nav-item active" onclick="showView('dashboard',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
         Dashboard
       </button>
-      <button class="nav-item" onclick="showView('kanban', this)">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="5" height="18" rx="1"/><rect x="10" y="3" width="5" height="12" rx="1"/><rect x="17" y="3" width="5" height="15" rx="1"/></svg>
+      <button class="nav-item" onclick="showView('kanban',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="5" height="18" rx="1"/><rect x="10" y="3" width="5" height="12" rx="1"/><rect x="17" y="3" width="5" height="15" rx="1"/></svg>
         Kanban Board
         <span class="nav-badge" id="pending-count">0</span>
       </button>
-      <button class="nav-item" onclick="showView('analytics', this)">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      <button class="nav-item" onclick="showView('analytics',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
         Analytics
       </button>
-      <button class="nav-item" onclick="showView('ai', this)">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+      <button class="nav-item" onclick="showView('ai',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
         IA Prioritizer
       </button>
     </div>
-    <div class="sidebar-section">
-      <div class="sidebar-section-label">Compte</div>
-      <button class="nav-item" onclick="openModal('new-task')">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+
+    <div class="s-section">
+      <div class="s-label">Compte</div>
+      <button class="nav-item" onclick="openModal('task')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
         Nouvelle tâche
       </button>
-      <button class="nav-item" onclick="showView('settings', this)">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <button class="nav-item" onclick="showView('settings',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         Paramètres
       </button>
     </div>
-    <div class="sidebar-footer">
-      <div class="user-chip" onclick="showView('settings')">
+
+    <div class="s-bottom">
+      <div class="u-chip" onclick="showView('settings')">
         <div class="avatar" id="user-avatar">?</div>
-        <div class="user-info">
-          <div class="user-name" id="user-name">Chargement...</div>
-          <div class="user-role" id="user-role">Utilisateur</div>
+        <div>
+          <div class="u-name" id="user-name">Chargement...</div>
+          <div class="u-role" id="user-role">Membre</div>
         </div>
       </div>
     </div>
   </aside>
 
-  <!-- ══ HEADER ══ -->
+  <!-- HEADER -->
   <header class="header">
-    <h1 class="header-title" id="view-title">Dashboard</h1>
-    <div class="header-actions">
-      <div class="search-bar">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <h1 class="h-title" id="view-title">Dashboard</h1>
+    <div class="h-right">
+      <div class="searchbox">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input type="text" placeholder="Rechercher une tâche..." id="search-input" oninput="filterTasks()" />
       </div>
-      <button class="btn btn-primary btn-sm" onclick="openModal('new-task')">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <button class="btn btn-primary btn-sm" onclick="openModal('task')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Nouvelle tâche
       </button>
       <button class="btn btn-ghost btn-icon" onclick="logout()" title="Déconnexion">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
       </button>
     </div>
   </header>
 
-  <!-- ══ MAIN ══ -->
-  <main class="main-content">
+  <!-- MAIN -->
+  <main class="main">
 
     <!-- DASHBOARD -->
     <div id="view-dashboard">
-      <div class="stats-grid">
-        <div class="stat-card accent"><div class="stat-label">Total tâches</div><div class="stat-value" id="stat-total">—</div><div class="stat-trend">Toutes les tâches</div></div>
-        <div class="stat-card emerald"><div class="stat-label">Terminées</div><div class="stat-value" id="stat-done">—</div><div class="stat-trend trend-up" id="stat-pct">—</div></div>
-        <div class="stat-card amber"><div class="stat-label">En cours</div><div class="stat-value" id="stat-inprogress">—</div><div class="stat-trend">Actuellement actives</div></div>
-        <div class="stat-card rose"><div class="stat-label">Haute priorité</div><div class="stat-value" id="stat-high">—</div><div class="stat-trend trend-down">Nécessitent attention</div></div>
+      <div class="stats-row">
+        <div class="stat" style="--c:#6366f1"><div class="stat-ico">📋</div><div class="stat-val" id="stat-total">—</div><div class="stat-lbl">Total tâches</div><div class="stat-sub">Backlog complet</div></div>
+        <div class="stat" style="--c:#10b981"><div class="stat-ico">✅</div><div class="stat-val" id="stat-done">—</div><div class="stat-lbl">Terminées</div><div class="stat-sub" id="stat-pct">— % du total</div></div>
+        <div class="stat" style="--c:#f59e0b"><div class="stat-ico">⚡</div><div class="stat-val" id="stat-inprogress">—</div><div class="stat-lbl">En cours</div><div class="stat-sub">Actuellement actives</div></div>
+        <div class="stat" style="--c:#f43f5e"><div class="stat-ico">🔥</div><div class="stat-val" id="stat-high">—</div><div class="stat-lbl">Haute priorité</div><div class="stat-sub">Nécessitent attention</div></div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start;">
+
+      <div style="display:grid;grid-template-columns:1fr 310px;gap:16px;align-items:start;">
         <div class="card">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
-            <h2 style="font-size:16px;font-weight:600;">Tâches récentes</h2>
-            <button class="btn btn-ghost btn-sm" onclick="showView('kanban')">Voir tout →</button>
-          </div>
-          <div id="recent-tasks-list"></div>
+          <div class="card-title">Tâches récentes <button class="btn btn-ghost btn-sm" onclick="showView('kanban')">Voir tout →</button></div>
+          <div id="recent-list"></div>
         </div>
-        <div style="display:flex;flex-direction:column;gap:16px;">
+        <div style="display:flex;flex-direction:column;gap:14px;">
           <div class="card">
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
-              <span style="font-size:20px;">🤖</span>
-              <h3 style="font-size:15px;font-weight:600;">IA Prioritizer</h3>
+            <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px;">
+              <div style="width:34px;height:34px;background:linear-gradient(135deg,rgba(99,102,241,0.2),rgba(139,92,246,0.1));border:1px solid rgba(99,102,241,0.2);border-radius:9px;display:grid;place-items:center;font-size:16px;">🤖</div>
+              <div><div style="font-size:13px;font-weight:700;">IA Prioritizer</div><div style="font-size:10px;color:var(--text3);">Powered by GPT-4o</div></div>
             </div>
-            <p style="font-size:13px;color:var(--text-muted);margin-bottom:14px;">GPT-4o analyse et priorise votre backlog automatiquement.</p>
-            <button class="btn btn-primary" style="width:100%;" onclick="runAIPrioritize()" id="ai-quick-btn">⚡ Analyser le backlog</button>
+            <p style="font-size:12px;color:var(--text3);margin-bottom:12px;line-height:1.5;">Analyse et priorisation automatique de votre backlog.</p>
+            <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="runAIPrioritize()" id="ai-quick-btn">⚡ Analyser le backlog</button>
             <div class="ai-panel" id="ai-quick-result" style="display:none;">
-              <div class="ai-panel-header">🤖 Résultat IA</div>
+              <div class="ai-head">🤖 Résultat IA</div>
               <div class="ai-result" id="ai-quick-text"></div>
             </div>
           </div>
           <div class="card">
-            <h3 style="font-size:15px;font-weight:600;margin-bottom:16px;">Progression</h3>
-            <div style="margin-bottom:12px;">
-              <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-bottom:4px;"><span>Haute priorité</span><span id="prog-high-lbl">0/0</span></div>
-              <div class="progress-bar"><div class="progress-fill rose" id="prog-high" style="width:0%"></div></div>
-            </div>
-            <div style="margin-bottom:12px;">
-              <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-bottom:4px;"><span>Priorité moyenne</span><span id="prog-med-lbl">0/0</span></div>
-              <div class="progress-bar"><div class="progress-fill amber" id="prog-med" style="width:0%"></div></div>
-            </div>
-            <div>
-              <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-bottom:4px;"><span>Basse priorité</span><span id="prog-low-lbl">0/0</span></div>
-              <div class="progress-bar"><div class="progress-fill" id="prog-low" style="width:0%"></div></div>
-            </div>
+            <div class="card-title">Progression</div>
+            <div class="prog-row"><div class="prog-head"><span>Haute priorité</span><span id="prog-high-lbl" style="color:var(--rose)">0/0</span></div><div class="prog-track"><div class="prog-fill" id="prog-high" style="width:0%;background:var(--rose)"></div></div></div>
+            <div class="prog-row"><div class="prog-head"><span>Priorité moyenne</span><span id="prog-med-lbl" style="color:var(--amber)">0/0</span></div><div class="prog-track"><div class="prog-fill" id="prog-med" style="width:0%;background:var(--amber)"></div></div></div>
+            <div class="prog-row"><div class="prog-head"><span>Basse priorité</span><span id="prog-low-lbl" style="color:var(--accent)">0/0</span></div><div class="prog-track"><div class="prog-fill" id="prog-low" style="width:0%;background:var(--accent)"></div></div></div>
           </div>
         </div>
       </div>
@@ -807,26 +311,26 @@ body {
 
     <!-- KANBAN -->
     <div id="view-kanban" style="display:none;">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap;">
         <div class="tabs">
           <button class="tab active" onclick="filterKanban('all',this)">Tout</button>
           <button class="tab" onclick="filterKanban('high',this)">Haute</button>
           <button class="tab" onclick="filterKanban('medium',this)">Moyenne</button>
           <button class="tab" onclick="filterKanban('low',this)">Basse</button>
         </div>
-        <button class="btn btn-ghost btn-sm" style="margin-left:auto;" onclick="openModal('new-task')">+ Ajouter une tâche</button>
+        <button class="btn btn-ghost btn-sm" style="margin-left:auto;" onclick="openModal('task')">+ Ajouter</button>
       </div>
       <div class="kanban">
-        <div class="kanban-col" id="col-todo" ondragover="onDragOver(event)" ondrop="onDrop(event,'todo')" ondragleave="onDragLeave(event)">
-          <div class="kanban-col-header"><div class="col-dot" style="background:#6366f1;"></div>À faire<span class="col-count" id="count-todo">0</span></div>
+        <div class="k-col" id="col-todo" ondragover="onDragOver(event)" ondrop="onDrop(event,'todo')" ondragleave="onDragLeave(event)">
+          <div class="k-head"><div class="k-dot" style="background:var(--accent)"></div>À faire<span class="k-cnt" id="count-todo">0</span></div>
           <div id="tasks-todo"></div>
         </div>
-        <div class="kanban-col" id="col-inprogress" ondragover="onDragOver(event)" ondrop="onDrop(event,'inprogress')" ondragleave="onDragLeave(event)">
-          <div class="kanban-col-header"><div class="col-dot" style="background:#f59e0b;"></div>En cours<span class="col-count" id="count-inprogress">0</span></div>
+        <div class="k-col" id="col-inprogress" ondragover="onDragOver(event)" ondrop="onDrop(event,'inprogress')" ondragleave="onDragLeave(event)">
+          <div class="k-head"><div class="k-dot" style="background:var(--amber)"></div>En cours<span class="k-cnt" id="count-inprogress">0</span></div>
           <div id="tasks-inprogress"></div>
         </div>
-        <div class="kanban-col" id="col-done" ondragover="onDragOver(event)" ondrop="onDrop(event,'done')" ondragleave="onDragLeave(event)">
-          <div class="kanban-col-header"><div class="col-dot" style="background:#10b981;"></div>Terminé<span class="col-count" id="count-done">0</span></div>
+        <div class="k-col" id="col-done" ondragover="onDragOver(event)" ondrop="onDrop(event,'done')" ondragleave="onDragLeave(event)">
+          <div class="k-head"><div class="k-dot" style="background:var(--emerald)"></div>Terminé<span class="k-cnt" id="count-done">0</span></div>
           <div id="tasks-done"></div>
         </div>
       </div>
@@ -834,42 +338,38 @@ body {
 
     <!-- ANALYTICS -->
     <div id="view-analytics" style="display:none;">
-      <div class="stats-grid" style="margin-bottom:28px;">
-        <div class="stat-card accent"><div class="stat-label">Vélocité</div><div class="stat-value" id="ana-velocity">—</div><div class="stat-trend">tâches / semaine</div></div>
-        <div class="stat-card emerald"><div class="stat-label">Taux de complétion</div><div class="stat-value" id="ana-completion">—</div><div class="stat-trend">du backlog total</div></div>
-        <div class="stat-card amber"><div class="stat-label">Analysées par IA</div><div class="stat-value" id="ana-ai">—</div><div class="stat-trend">tâches priorisées</div></div>
+      <div class="stats-row" style="grid-template-columns:repeat(3,1fr);margin-bottom:20px;">
+        <div class="stat" style="--c:#6366f1"><div class="stat-ico">📈</div><div class="stat-val" id="ana-velocity">—</div><div class="stat-lbl">Vélocité</div><div class="stat-sub">tâches / semaine</div></div>
+        <div class="stat" style="--c:#10b981"><div class="stat-ico">🎯</div><div class="stat-val" id="ana-completion">—</div><div class="stat-lbl">Complétion</div><div class="stat-sub">du backlog total</div></div>
+        <div class="stat" style="--c:#8b5cf6"><div class="stat-ico">🤖</div><div class="stat-val" id="ana-ai">—</div><div class="stat-lbl">Analysées IA</div><div class="stat-sub">tâches scorées</div></div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
-        <div class="card"><h3 style="font-size:15px;font-weight:600;margin-bottom:20px;">Distribution des priorités</h3><canvas id="chart-priority" height="200"></canvas></div>
-        <div class="card"><h3 style="font-size:15px;font-weight:600;margin-bottom:20px;">Statut des tâches</h3><canvas id="chart-status" height="200"></canvas></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div class="card"><div class="card-title">Distribution des priorités</div><canvas id="chart-priority" height="200"></canvas></div>
+        <div class="card"><div class="card-title">Statut des tâches</div><canvas id="chart-status" height="200"></canvas></div>
       </div>
     </div>
 
     <!-- IA -->
     <div id="view-ai" style="display:none;">
-      <div style="max-width:700px;">
+      <div style="max-width:660px;">
         <div class="card card-glow">
-          <div style="display:flex;align-items:center;gap:14px;margin-bottom:24px;">
-            <div style="width:48px;height:48px;background:var(--accent-glow);border-radius:var(--radius-md);display:grid;place-items:center;font-size:24px;border:1px solid rgba(99,102,241,0.2);">🤖</div>
-            <div><h2 style="font-size:18px;font-weight:700;">IA Prioritizer</h2><p style="font-size:13px;color:var(--text-muted);">Powered by GPT-4o</p></div>
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:22px;">
+            <div style="width:48px;height:48px;background:linear-gradient(135deg,rgba(99,102,241,0.2),rgba(139,92,246,0.1));border:1px solid rgba(99,102,241,0.2);border-radius:12px;display:grid;place-items:center;font-size:22px;">🤖</div>
+            <div><div style="font-family:var(--fontd);font-size:18px;font-weight:800;">IA Prioritizer</div><div style="font-size:12px;color:var(--text3);">Powered by GPT-4o</div></div>
           </div>
-          <div class="form-group">
-            <label class="form-label">Contexte du projet (optionnel)</label>
-            <textarea class="form-textarea" id="ai-context" placeholder="Ex: Application SaaS B2B, sprint de 2 semaines..."></textarea>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Critère de priorisation</label>
-            <select class="form-select" id="ai-criteria">
+          <div class="fg"><label class="fl">Contexte du projet (optionnel)</label><textarea class="ft" id="ai-context" placeholder="Ex: Application SaaS B2B, sprint de 2 semaines..."></textarea></div>
+          <div class="fg"><label class="fl">Critère de priorisation</label>
+            <select class="fs" id="ai-criteria">
               <option value="impact">Impact business</option>
               <option value="effort">Effort vs impact (quick wins)</option>
               <option value="urgency">Urgence</option>
               <option value="risk">Réduction de risque</option>
             </select>
           </div>
-          <button class="btn btn-primary" style="width:100%;padding:12px;font-size:15px;" onclick="runAIFull()" id="ai-full-btn">⚡ Lancer l'analyse IA complète</button>
+          <button class="btn btn-primary" style="width:100%;justify-content:center;padding:13px;" onclick="runAIFull()" id="ai-full-btn">⚡ Lancer l'analyse IA complète</button>
         </div>
         <div class="ai-panel" id="ai-full-result" style="display:none;">
-          <div class="ai-panel-header">🤖 Analyse complète<span class="badge badge-ai" style="margin-left:auto;">GPT-4o</span></div>
+          <div class="ai-head">🤖 Analyse complète <span class="badge badge-ai" style="margin-left:auto;">GPT-4o</span></div>
           <div class="ai-result" id="ai-full-text"></div>
         </div>
       </div>
@@ -877,33 +377,30 @@ body {
 
     <!-- PARAMÈTRES -->
     <div id="view-settings" style="display:none;">
-      <div style="max-width:620px;display:flex;flex-direction:column;gap:20px;">
+      <div style="max-width:580px;display:flex;flex-direction:column;gap:16px;">
         <div class="card">
-          <h3 style="font-size:15px;font-weight:600;margin-bottom:20px;">Mon profil</h3>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-            <div class="form-group" style="margin-bottom:0;"><label class="form-label">Nom complet</label><input type="text" class="form-input" id="set-name" placeholder="Prénom Nom" /></div>
-            <div class="form-group" style="margin-bottom:0;"><label class="form-label">Email</label><input type="email" class="form-input" id="set-email" placeholder="email@exemple.com" /></div>
+          <div class="card-title">Mon profil</div>
+          <div class="two-fi">
+            <div class="fg" style="margin-bottom:0"><label class="fl">Nom complet</label><input type="text" class="fi" id="set-name" placeholder="Prénom Nom" /></div>
+            <div class="fg" style="margin-bottom:0"><label class="fl">Email</label><input type="email" class="fi" id="set-email" placeholder="email@exemple.com" /></div>
           </div>
-          <div style="margin-top:16px;"><button class="btn btn-primary" onclick="saveProfile()">Sauvegarder le profil</button></div>
+          <div style="margin-top:14px;"><button class="btn btn-primary" onclick="saveProfile()">Sauvegarder</button></div>
         </div>
         <div class="card">
-          <h3 style="font-size:15px;font-weight:600;margin-bottom:20px;">Changer le mot de passe</h3>
-          <div class="form-group"><label class="form-label">Mot de passe actuel</label><input type="password" class="form-input" id="set-old-pwd" placeholder="••••••••" /></div>
-          <div class="form-group"><label class="form-label">Nouveau mot de passe</label><input type="password" class="form-input" id="set-new-pwd" placeholder="Minimum 6 caractères" /></div>
-          <div class="form-group"><label class="form-label">Confirmer</label><input type="password" class="form-input" id="set-confirm-pwd" placeholder="••••••••" /></div>
+          <div class="card-title">Changer le mot de passe</div>
+          <div class="fg"><label class="fl">Mot de passe actuel</label><input type="password" class="fi" id="set-old-pwd" placeholder="••••••••" /></div>
+          <div class="fg"><label class="fl">Nouveau mot de passe</label><input type="password" class="fi" id="set-new-pwd" placeholder="Minimum 6 caractères" /></div>
+          <div class="fg"><label class="fl">Confirmer</label><input type="password" class="fi" id="set-confirm-pwd" placeholder="••••••••" /></div>
           <button class="btn btn-primary" onclick="changePassword()">Modifier le mot de passe</button>
         </div>
         <div class="card" id="admin-panel" style="display:none;">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-            <h3 style="font-size:15px;font-weight:600;">Gestion des utilisateurs</h3>
-            <span class="badge badge-ai">Administrateur</span>
-          </div>
-          <button class="btn btn-ghost btn-sm" onclick="loadAdminUsers()" style="margin-bottom:14px;">🔄 Rafraîchir la liste</button>
-          <div id="admin-users-list"><p style="font-size:13px;color:var(--text-muted);">Cliquez sur Rafraîchir pour charger les utilisateurs.</p></div>
+          <div class="card-title">Gestion des utilisateurs <span class="badge badge-ai">Admin</span></div>
+          <button class="btn btn-ghost btn-sm" onclick="loadAdminUsers()" style="margin-bottom:14px;">🔄 Rafraîchir</button>
+          <div id="admin-users-list"><p style="font-size:13px;color:var(--text3);">Cliquez sur Rafraîchir pour charger.</p></div>
         </div>
-        <div class="card">
-          <h3 style="font-size:15px;font-weight:600;margin-bottom:12px;">Zone de danger</h3>
-          <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;">Ces actions sont irréversibles et n'affectent que votre compte.</p>
+        <div class="danger-zone">
+          <div style="font-size:14px;font-weight:700;color:var(--rose);margin-bottom:8px;">⚠️ Zone de danger</div>
+          <p style="font-size:12px;color:var(--text3);margin-bottom:14px;">Ces actions sont irréversibles et n'affectent que votre compte.</p>
           <div style="display:flex;gap:10px;flex-wrap:wrap;">
             <button class="btn btn-danger" onclick="clearAllTasks()">🗑️ Supprimer toutes mes tâches</button>
             <button class="btn btn-danger" onclick="logout()">🚪 Se déconnecter</button>
@@ -915,59 +412,47 @@ body {
   </main>
 </div>
 
-<!-- MODAL tâche -->
-<div class="modal-overlay" id="modal-new-task" onclick="closeModalOutside(event)">
+<!-- MODAL TÂCHE -->
+<div class="overlay" id="modal-task" onclick="closeModalOutside(event)">
   <div class="modal">
-    <div class="modal-header">
-      <h2 class="modal-title" id="modal-task-title">Nouvelle tâche</h2>
-      <button class="btn btn-ghost btn-icon" onclick="closeModal('new-task')">✕</button>
+    <div class="m-head">
+      <h2 class="m-title" id="modal-task-title">Nouvelle tâche</h2>
+      <button class="btn btn-ghost btn-icon" onclick="closeModal('task')">✕</button>
     </div>
     <input type="hidden" id="edit-task-id" />
-    <div class="form-group"><label class="form-label">Titre <span style="color:var(--rose)">*</span></label><input type="text" class="form-input" id="task-title-input" placeholder="Ex: Implémenter l'authentification JWT" /></div>
-    <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="task-desc-input" placeholder="Décrivez la tâche..."></textarea></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-      <div class="form-group"><label class="form-label">Priorité</label><select class="form-select" id="task-priority-input"><option value="high">🔴 Haute</option><option value="medium" selected>🟡 Moyenne</option><option value="low">🟢 Basse</option></select></div>
-      <div class="form-group"><label class="form-label">Statut</label><select class="form-select" id="task-status-input"><option value="todo" selected>À faire</option><option value="inprogress">En cours</option><option value="done">Terminé</option></select></div>
+    <div class="fg"><label class="fl">Titre <span>*</span></label><input type="text" class="fi" id="task-title-input" placeholder="Ex: Implémenter l'authentification JWT" /></div>
+    <div class="fg"><label class="fl">Description</label><textarea class="ft" id="task-desc-input" placeholder="Décrivez la tâche..."></textarea></div>
+    <div class="two-fi">
+      <div class="fg"><label class="fl">Priorité</label><select class="fs" id="task-priority-input"><option value="high">🔴 Haute</option><option value="medium" selected>🟡 Moyenne</option><option value="low">🟢 Basse</option></select></div>
+      <div class="fg"><label class="fl">Statut</label><select class="fs" id="task-status-input"><option value="todo" selected>À faire</option><option value="inprogress">En cours</option><option value="done">Terminé</option></select></div>
     </div>
-    <div class="form-group"><label class="form-label">Assigné à</label><input type="text" class="form-input" id="task-assignee-input" placeholder="Nom du membre" /></div>
-    <div style="display:flex;gap:10px;margin-top:8px;">
-      <button class="btn btn-ghost" style="flex:1;" onclick="closeModal('new-task')">Annuler</button>
-      <button class="btn btn-primary" style="flex:2;" onclick="saveTask()">Sauvegarder</button>
+    <div class="fg"><label class="fl">Assigné à</label><input type="text" class="fi" id="task-assignee-input" placeholder="Nom du membre" /></div>
+    <div style="display:flex;gap:10px;margin-top:6px;">
+      <button class="btn btn-ghost" style="flex:1;justify-content:center;" onclick="closeModal('task')">Annuler</button>
+      <button class="btn btn-primary" style="flex:2;justify-content:center;" onclick="saveTask()">Sauvegarder</button>
     </div>
   </div>
 </div>
 
-<div class="toast-container" id="toasts"></div>
+<div class="toasts" id="toasts"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<script
-/* ============================================
-   SmartBacklog — app.js
-============================================ */
 
+<script>
 const API = 'http://127.0.0.1:8000';
-let tasks = [];
-let currentFilter = 'all';
-let draggedId = null;
+let tasks = [], currentFilter = 'all', draggedId = null;
+let chartP = null, chartS = null;
 
-/* ─────────────────────────────
-   INIT
-───────────────────────────── */
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function() {
   checkAuth();
-  loadSettings();
   fetchTasks();
 });
 
-/* ─────────────────────────────
-   AUTH
-───────────────────────────── */
 function checkAuth() {
-  const token = localStorage.getItem('token');
-  if (!token) { window.location.href = 'login.html'; return; }
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
-  const name = user.username || user.name || 'Utilisateur';
-  document.getElementById('user-name').textContent = name;
-  document.getElementById('user-avatar').textContent = name.charAt(0).toUpperCase();
+  if (!localStorage.getItem('token')) {
+    window.location.href = 'login.html';
+    return;
+  }
+  loadUserProfile();
 }
 
 function logout() {
@@ -976,375 +461,173 @@ function logout() {
   window.location.href = 'login.html';
 }
 
-/* ─────────────────────────────
-   SETTINGS
-───────────────────────────── */
-function loadSettings() {
-  const s = JSON.parse(localStorage.getItem('settings') || '{}');
-  if (s.name)  document.getElementById('set-name').value  = s.name;
-  if (s.email) document.getElementById('set-email').value = s.email;
-}
-
-function saveSettings() {
-  const s = { name: document.getElementById('set-name').value, email: document.getElementById('set-email').value };
-  localStorage.setItem('settings', JSON.stringify(s));
-  if (s.name) {
-    document.getElementById('user-name').textContent = s.name;
-    document.getElementById('user-avatar').textContent = s.name.charAt(0).toUpperCase();
+async function loadUserProfile() {
+  try {
+    var p = await apiFetch('/auth/me');
+    if (!p) return;
+    var name = p.full_name || p.username;
+    setText('user-name', name);
+    setText('user-avatar', name.charAt(0).toUpperCase());
+    setText('user-role', p.role === 'admin' ? 'Administrateur' : 'Membre');
+    var sn = document.getElementById('set-name');
+    var se = document.getElementById('set-email');
+    if (sn) sn.value = p.full_name || '';
+    if (se) se.value = p.email || '';
+    if (p.role === 'admin') {
+      var ap = document.getElementById('admin-panel');
+      if (ap) ap.style.display = '';
+    }
+    var s = JSON.parse(localStorage.getItem('user') || '{}');
+    s.role = p.role;
+    s.full_name = p.full_name;
+    localStorage.setItem('user', JSON.stringify(s));
+  } catch(e) {
+    if (e.status === 401) logout();
   }
-  toast('Paramètres sauvegardés !', 'success');
 }
 
-/* ─────────────────────────────
-   NAVIGATION
-───────────────────────────── */
-const views = ['dashboard', 'kanban', 'analytics', 'ai', 'settings'];
-const viewTitles = { dashboard: 'Dashboard', kanban: 'Kanban Board', analytics: 'Analytics', ai: 'IA Prioritizer', settings: 'Paramètres' };
-
-function showView(name) {
-  views.forEach(v => {
-    document.getElementById('view-' + v).style.display = v === name ? '' : 'none';
-  });
-  document.getElementById('view-title').textContent = viewTitles[name] || name;
-  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-  event?.currentTarget?.classList.add('active');
-  if (name === 'kanban')    renderKanban();
-  if (name === 'analytics') renderAnalytics();
-  if (name === 'dashboard') renderDashboard();
+async function saveProfile() {
+  var full_name = document.getElementById('set-name').value.trim();
+  var email = document.getElementById('set-email').value.trim();
+  if (!full_name) { toast('Le nom ne peut pas être vide.', 'error'); return; }
+  try {
+    await apiFetch('/auth/me', { method: 'PUT', body: JSON.stringify({ full_name: full_name, email: email }) });
+    setText('user-name', full_name);
+    setText('user-avatar', full_name.charAt(0).toUpperCase());
+    toast('Profil mis à jour !', 'success');
+  } catch(e) { toast(e.message || 'Erreur.', 'error'); }
 }
 
-/* ─────────────────────────────
-   API CALLS
-───────────────────────────── */
-async function apiFetch(path, options = {}) {
-  const token = localStorage.getItem('token');
-  const res = await fetch(API + path, {
-    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json', ...options.headers },
-    ...options
-  });
+async function changePassword() {
+  var o = document.getElementById('set-old-pwd').value;
+  var n = document.getElementById('set-new-pwd').value;
+  var c = document.getElementById('set-confirm-pwd').value;
+  if (!o || !n) { toast('Remplissez tous les champs.', 'error'); return; }
+  if (n !== c) { toast('Les mots de passe ne correspondent pas.', 'error'); return; }
+  if (n.length < 6) { toast('Minimum 6 caractères.', 'error'); return; }
+  try {
+    await apiFetch('/auth/change-password', { method: 'POST', body: JSON.stringify({ old_password: o, new_password: n }) });
+    document.getElementById('set-old-pwd').value = '';
+    document.getElementById('set-new-pwd').value = '';
+    document.getElementById('set-confirm-pwd').value = '';
+    toast('Mot de passe modifié !', 'success');
+  } catch(e) { toast(e.message || 'Erreur.', 'error'); }
+}
+
+async function loadAdminUsers() {
+  var list = document.getElementById('admin-users-list');
+  if (!list) return;
+  list.innerHTML = '<div style="font-size:12px;color:var(--text3)">Chargement...</div>';
+  try {
+    var users = await apiFetch('/auth/users');
+    var me = JSON.parse(localStorage.getItem('user') || '{}').username;
+    if (!users || !users.length) { list.innerHTML = '<div style="font-size:12px;color:var(--text3)">Aucun utilisateur.</div>'; return; }
+    var html = '';
+    for (var i = 0; i < users.length; i++) {
+      var u = users[i];
+      var uname = u.full_name || u.username;
+      var isMe = u.username === me;
+      var date = u.created_at ? new Date(u.created_at).toLocaleDateString('fr-FR') : '—';
+      html += '<div class="urow">';
+      html += '<div class="avatar" style="width:28px;height:28px;font-size:10px;">' + uname.charAt(0).toUpperCase() + '</div>';
+      html += '<div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600">' + escHtml(uname) + (isMe ? ' <span style="font-size:10px;color:var(--accent2)">(moi)</span>' : '') + '</div>';
+      html += '<div style="font-size:10px;color:var(--text3)">@' + escHtml(u.username) + ' · ' + date + '</div></div>';
+      html += '<span class="' + (u.role === 'admin' ? 'pill-admin' : 'pill-member') + '">' + u.role + '</span>';
+      if (!isMe) html += '<button class="btn btn-danger btn-sm" onclick="adminDeleteUser(\'' + escHtml(u.username) + '\')">×</button>';
+      html += '</div>';
+    }
+    list.innerHTML = html;
+  } catch(e) { list.innerHTML = '<div style="font-size:12px;color:var(--rose)">Erreur.</div>'; }
+}
+
+async function adminDeleteUser(username) {
+  if (!confirm('Supprimer "' + username + '" ?')) return;
+  try {
+    await apiFetch('/auth/users/' + username, { method: 'DELETE' });
+    toast('"' + username + '" supprimé.', 'success');
+    loadAdminUsers();
+  } catch(e) { toast(e.message || 'Erreur.', 'error'); }
+}
+
+async function apiFetch(path, opts) {
+  if (!opts) opts = {};
+  var token = localStorage.getItem('token');
+  var headers = { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' };
+  if (opts.headers) Object.assign(headers, opts.headers);
+  opts.headers = headers;
+  var res = await fetch(API + path, opts);
   if (res.status === 401) { logout(); return null; }
-  if (!res.ok) throw new Error(await res.text());
-  return res.json();
+  var data = {};
+  try { data = await res.json(); } catch(e) {}
+  if (!res.ok) {
+    var err = new Error(data.detail || ('Erreur ' + res.status));
+    err.status = res.status;
+    throw err;
+  }
+  return data;
+}
+
+var TITLES = { dashboard: 'Dashboard', kanban: 'Kanban Board', analytics: 'Analytics', ai: 'IA Prioritizer', settings: 'Paramètres' };
+
+function showView(name, btn) {
+  var keys = Object.keys(TITLES);
+  for (var i = 0; i < keys.length; i++) {
+    var el = document.getElementById('view-' + keys[i]);
+    if (el) el.style.display = keys[i] === name ? '' : 'none';
+  }
+  setText('view-title', TITLES[name] || name);
+  var navItems = document.querySelectorAll('.nav-item');
+  for (var j = 0; j < navItems.length; j++) navItems[j].classList.remove('active');
+  if (btn) btn.classList.add('active');
+  if (name === 'dashboard') renderDashboard();
+  if (name === 'kanban') renderKanban();
+  if (name === 'analytics') renderAnalytics();
+  if (name === 'settings') loadUserProfile();
 }
 
 async function fetchTasks() {
   try {
-    tasks = await apiFetch('/tasks') || [];
-    renderDashboard();
-    document.getElementById('pending-count').textContent =
-      tasks.filter(t => t.status !== 'done').length;
-  } catch (e) {
-    // Mode démo si le backend n'est pas lancé
+    var data = await apiFetch('/tasks');
+    tasks = data || [];
+  } catch(e) {
     tasks = getDemoTasks();
-    renderDashboard();
+    toast('Mode démo — backend non connecté', 'info');
   }
+  renderDashboard();
+  updateBadge();
 }
 
 function getDemoTasks() {
+  var now = new Date().toISOString();
   return [
-    { id: 1, title: 'Implémenter auth JWT', description: 'Système d\'authentification complet', priority: 'high', status: 'todo' },
-    { id: 2, title: 'Dashboard analytics', description: 'Graphiques de performance', priority: 'high', status: 'inprogress' },
-    { id: 3, title: 'API REST tâches', description: 'CRUD complet avec FastAPI', priority: 'medium', status: 'done' },
-    { id: 4, title: 'Interface Kanban', description: 'Drag & drop des tâches', priority: 'medium', status: 'todo' },
-    { id: 5, title: 'Intégration GPT-4o', description: 'Priorisation automatique', priority: 'low', status: 'inprogress' },
-    { id: 6, title: 'Tests unitaires', description: 'Coverage > 80%', priority: 'low', status: 'todo' },
+    {id:1, title:'Implémenter auth JWT', description:'Système complet', priority:'high', status:'todo', ai_score:null, created_at:now, updated_at:now},
+    {id:2, title:'Dashboard analytics', description:'Graphiques de performance', priority:'high', status:'inprogress', ai_score:1, created_at:now, updated_at:now},
+    {id:3, title:'API REST tâches', description:'CRUD complet FastAPI', priority:'medium', status:'done', ai_score:null, created_at:now, updated_at:now},
+    {id:4, title:'Interface Kanban', description:'Drag & drop des tâches', priority:'medium', status:'todo', ai_score:null, created_at:now, updated_at:now},
+    {id:5, title:'Intégration GPT-4o', description:'Priorisation automatique', priority:'high', status:'inprogress', ai_score:2, created_at:now, updated_at:now},
+    {id:6, title:'Tests unitaires', description:'Coverage > 80%', priority:'low', status:'todo', ai_score:null, created_at:now, updated_at:now}
   ];
 }
 
-/* ─────────────────────────────
-   TASK CRUD
-───────────────────────────── */
-async function saveTask() {
-  const id    = document.getElementById('edit-task-id').value;
-  const title = document.getElementById('task-title-input').value.trim();
-  if (!title) { toast('Le titre est obligatoire', 'error'); return; }
-
-  const payload = {
-    title,
-    description: document.getElementById('task-desc-input').value,
-    priority:    document.getElementById('task-priority-input').value,
-    status:      document.getElementById('task-status-input').value,
-  };
-
-  try {
-    if (id) {
-      await apiFetch(`/tasks/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
-      tasks = tasks.map(t => t.id == id ? { ...t, ...payload } : t);
-      toast('Tâche mise à jour !', 'success');
-    } else {
-      const created = await apiFetch('/tasks', { method: 'POST', body: JSON.stringify(payload) });
-      tasks.push(created || { ...payload, id: Date.now() });
-      toast('Tâche créée !', 'success');
-    }
-  } catch {
-    const newTask = { ...payload, id: Date.now() };
-    if (id) tasks = tasks.map(t => t.id == id ? newTask : t);
-    else tasks.push(newTask);
-    toast(id ? 'Tâche mise à jour !' : 'Tâche créée !', 'success');
-  }
-
-  closeModal('new-task');
-  renderDashboard();
-  renderKanban();
-  document.getElementById('pending-count').textContent = tasks.filter(t => t.status !== 'done').length;
+function updateBadge() {
+  var cnt = 0;
+  for (var i = 0; i < tasks.length; i++) if (tasks[i].status !== 'done') cnt++;
+  setText('pending-count', cnt);
 }
 
-function editTask(id) {
-  const task = tasks.find(t => t.id == id);
-  if (!task) return;
-  document.getElementById('edit-task-id').value          = id;
-  document.getElementById('task-title-input').value      = task.title;
-  document.getElementById('task-desc-input').value       = task.description || '';
-  document.getElementById('task-priority-input').value   = task.priority;
-  document.getElementById('task-status-input').value     = task.status;
-  document.getElementById('modal-task-title').textContent = 'Modifier la tâche';
-  openModal('new-task');
-}
-
-async function deleteTask(id) {
-  if (!confirm('Supprimer cette tâche ?')) return;
-  try { await apiFetch(`/tasks/${id}`, { method: 'DELETE' }); } catch {}
-  tasks = tasks.filter(t => t.id !== id);
-  renderDashboard();
-  renderKanban();
-  toast('Tâche supprimée', 'info');
-}
-
-async function updateTaskStatus(id, status) {
-  tasks = tasks.map(t => t.id == id ? { ...t, status } : t);
-  try { await apiFetch(`/tasks/${id}`, { method: 'PUT', body: JSON.stringify({ status }) }); } catch {}
-  renderKanban();
-  renderDashboard();
-}
-
-function clearAllTasks() {
-  if (!confirm('Supprimer TOUTES les tâches ? Cette action est irréversible.')) return;
-  tasks = [];
-  renderDashboard();
-  renderKanban();
-  toast('Toutes les tâches ont été supprimées', 'info');
-}
-
-/* ─────────────────────────────
-   DASHBOARD
-───────────────────────────── */
-function renderDashboard() {
-  const total  = tasks.length;
-  const done   = tasks.filter(t => t.status === 'done').length;
-  const inprog = tasks.filter(t => t.status === 'inprogress').length;
-  const high   = tasks.filter(t => t.priority === 'high').length;
-  const pct    = total > 0 ? Math.round((done / total) * 100) : 0;
-
-  document.getElementById('stat-total').textContent      = total;
-  document.getElementById('stat-done').textContent       = done;
-  document.getElementById('stat-done-pct').textContent   = `${pct}% du total`;
-  document.getElementById('stat-inprogress').textContent = inprog;
-  document.getElementById('stat-high').textContent       = high;
-
-  // Progress bars
-  const byPrio = (p) => tasks.filter(t => t.priority === p);
-  const donePrio = (p) => byPrio(p).filter(t => t.status === 'done');
-
-  ['high','medium','low'].forEach(p => {
-    const all  = byPrio(p).length;
-    const done = donePrio(p).length;
-    const pct  = all > 0 ? Math.round((done / all) * 100) : 0;
-    const bar  = { high: 'prog-high', medium: 'prog-med', low: 'prog-low' }[p];
-    const lbl  = { high: 'prog-high-lbl', medium: 'prog-med-lbl', low: 'prog-low-lbl' }[p];
-    document.getElementById(bar).style.width = pct + '%';
-    document.getElementById(lbl).textContent = `${done}/${all}`;
-  });
-
-  // Recent tasks
-  const container = document.getElementById('recent-tasks-list');
-  const recent = [...tasks].slice(-5).reverse();
-  if (!recent.length) {
-    container.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-title">Aucune tâche</div><div class="empty-desc">Commencez par créer une tâche</div></div>`;
-    return;
-  }
-  container.innerHTML = recent.map(t => `
-    <div style="display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--border);">
-      <div style="flex:1; min-width:0;">
-        <div style="font-size:14px; font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escHtml(t.title)}</div>
-        <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">${statusLabel(t.status)}</div>
-      </div>
-      <span class="badge badge-${t.priority}">${priorityLabel(t.priority)}</span>
-    </div>`).join('');
-}
-
-/* ─────────────────────────────
-   KANBAN
-───────────────────────────── */
-function renderKanban() {
-  const statuses = ['todo', 'inprogress', 'done'];
-  const filtered = currentFilter === 'all' ? tasks : tasks.filter(t => t.priority === currentFilter);
-
-  statuses.forEach(s => {
-    const col   = filtered.filter(t => t.status === s);
-    const el    = document.getElementById('tasks-' + s);
-    const count = document.getElementById('count-' + s);
-    count.textContent = col.length;
-
-    if (!col.length) {
-      el.innerHTML = `<div class="empty-state" style="padding:30px 12px;"><div class="empty-desc">Glissez des tâches ici</div></div>`;
-      return;
-    }
-    el.innerHTML = col.map(t => taskCardHTML(t)).join('');
-  });
-}
-
-function taskCardHTML(t) {
-  return `
-  <div class="task-card" draggable="true"
-    ondragstart="onDragStart(event, ${t.id})"
-    ondragend="onDragEnd(event)">
-    <div class="task-ai-score">${t.ai_score ? 'AI #' + t.ai_score : ''}</div>
-    <div class="task-title">${escHtml(t.title)}</div>
-    ${t.description ? `<div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escHtml(t.description)}</div>` : ''}
-    <div class="task-meta">
-      <span class="badge badge-${t.priority}">${priorityLabel(t.priority)}</span>
-      <div style="margin-left:auto; display:flex; gap:6px;">
-        <button class="btn btn-ghost btn-icon btn-sm" onclick="editTask(${t.id})" title="Modifier" style="padding:4px 6px; font-size:12px;">✏️</button>
-        <button class="btn btn-danger btn-icon btn-sm" onclick="deleteTask(${t.id})" title="Supprimer" style="padding:4px 6px; font-size:12px;">🗑️</button>
-      </div>
-    </div>
-  </div>`;
-}
-
-function filterKanban(prio, btn) {
-  currentFilter = prio;
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  btn.classList.add('active');
-  renderKanban();
-}
-
-function filterTasks() {
-  const q = document.getElementById('search-input').value.toLowerCase();
-  // Only filter if kanban is visible
-  const kanban = document.getElementById('view-kanban');
-  if (kanban.style.display !== 'none') {
-    const allCards = document.querySelectorAll('.task-card');
-    allCards.forEach(card => {
-      const title = card.querySelector('.task-title').textContent.toLowerCase();
-      card.style.display = title.includes(q) ? '' : 'none';
-    });
-  }
-}
-
-/* ─────────────────────────────
-   DRAG & DROP
-───────────────────────────── */
-function onDragStart(e, id) {
-  draggedId = id;
-  e.currentTarget.classList.add('dragging');
-  e.dataTransfer.effectAllowed = 'move';
-}
-
-function onDragEnd(e) {
-  e.currentTarget.classList.remove('dragging');
-}
-
-function onDragOver(e) {
-  e.preventDefault();
-  e.dataTransfer.dropEffect = 'move';
-  e.currentTarget.style.background = 'rgba(99,102,241,0.05)';
-}
-
-function onDrop(e, status) {
-  e.preventDefault();
-  e.currentTarget.style.background = '';
-  if (draggedId !== null) {
-    updateTaskStatus(draggedId, status);
-    draggedId = null;
-  }
-}
-
-/* ─────────────────────────────
-   ANALYTICS
-───────────────────────────── */
-let chartP, chartS;
-
-function renderAnalytics() {
-  const total    = tasks.length;
-  const done     = tasks.filter(t => t.status === 'done').length;
-  const pct      = total > 0 ? Math.round((done / total) * 100) + '%' : '—';
-  const velocity = total > 0 ? (done / Math.max(1, 4)).toFixed(1) : '—';
-
-  document.getElementById('ana-velocity').textContent   = velocity;
-  document.getElementById('ana-completion').textContent = pct;
-  document.getElementById('ana-ai').textContent         = tasks.filter(t => t.ai_score).length;
-
-  const colors = { bg: ['rgba(244,63,94,0.6)','rgba(245,158,11,0.6)','rgba(99,102,241,0.6)'], border: ['#f43f5e','#f59e0b','#6366f1'] };
-
-  const prioData = { labels: ['Haute','Moyenne','Basse'], datasets: [{ data: ['high','medium','low'].map(p => tasks.filter(t => t.priority===p).length), backgroundColor: colors.bg, borderColor: colors.border, borderWidth: 1.5 }] };
-  const statData = { labels: ['À faire','En cours','Terminé'], datasets: [{ data: ['todo','inprogress','done'].map(s => tasks.filter(t => t.status===s).length), backgroundColor: ['rgba(99,102,241,0.5)','rgba(245,158,11,0.5)','rgba(16,185,129,0.5)'], borderColor: ['#6366f1','#f59e0b','#10b981'], borderWidth: 1.5 }] };
-
-  const opts = { responsive: true, plugins: { legend: { labels: { color: '#94a3b8', font: { size: 12 } } } } };
-
-  if (chartP) chartP.destroy();
-  if (chartS) chartS.destroy();
-  chartP = new Chart(document.getElementById('chart-priority'), { type: 'doughnut', data: prioData, options: opts });
-  chartS = new Chart(document.getElementById('chart-status'),   { type: 'doughnut', data: statData, options: opts });
-}
-
-/* ─────────────────────────────
-   AI
-───────────────────────────── */
-async function runAIPrioritize() {
-  const btn = document.getElementById('ai-btn-content');
-  btn.innerHTML = '<div class="spinner" style="display:inline-block;"></div> Analyse en cours...';
-
-  try {
-    const res = await apiFetch('/ai/prioritize', { method: 'POST', body: JSON.stringify({ tasks: tasks.map(t => t.title) }) });
-    document.getElementById('ai-quick-text').textContent = res?.result || JSON.stringify(res);
-    document.getElementById('ai-quick-result').style.display = '';
-    toast('Analyse IA terminée !', 'success');
-  } catch {
-    document.getElementById('ai-quick-text').textContent = '⚠️ Backend non connecté. Lancez le serveur FastAPI pour utiliser l\'IA.';
-    document.getElementById('ai-quick-result').style.display = '';
-  }
-  btn.innerHTML = '⚡ Analyser le backlog';
-}
-
-async function runAIFull() {
-  const btn      = document.getElementById('ai-full-btn');
-  const context  = document.getElementById('ai-context').value;
-  const criteria = document.getElementById('ai-criteria').value;
-  btn.disabled = true;
-  btn.innerHTML = '<div class="spinner" style="display:inline-block;"></div> Analyse en cours...';
-
-  const prompt = tasks.map((t, i) => `${i+1}. [${t.priority.toUpperCase()}] ${t.title} — ${t.description || 'sans description'}`).join('\n');
-
-  try {
-    const res = await apiFetch('/ai/prioritize', {
-      method: 'POST',
-      body: JSON.stringify({ tasks: prompt, context, criteria })
-    });
-    document.getElementById('ai-full-text').textContent = res?.result || JSON.stringify(res);
-    document.getElementById('ai-full-result').style.display = '';
-    toast('Analyse complète terminée !', 'success');
-  } catch {
-    document.getElementById('ai-full-text').textContent = `⚠️ Backend non connecté.\n\nVos tâches :\n${prompt}\n\nLancez le serveur FastAPI (cd Backend && py -m uvicorn main:app --reload) pour obtenir l'analyse GPT-4o.`;
-    document.getElementById('ai-full-result').style.display = '';
-  }
-  btn.disabled = false;
-  btn.innerHTML = '⚡ Lancer l\'analyse IA complète';
-}
-
-/* ─────────────────────────────
-   MODAL
-───────────────────────────── */
 function openModal(name) {
-  if (name === 'new-task') {
-    document.getElementById('edit-task-id').value           = '';
-    document.getElementById('task-title-input').value      = '';
-    document.getElementById('task-desc-input').value       = '';
-    document.getElementById('task-priority-input').value   = 'medium';
-    document.getElementById('task-status-input').value     = 'todo';
-    document.getElementById('modal-task-title').textContent = 'Nouvelle tâche';
+  if (name === 'task') {
+    document.getElementById('edit-task-id').value = '';
+    document.getElementById('task-title-input').value = '';
+    document.getElementById('task-desc-input').value = '';
+    document.getElementById('task-priority-input').value = 'medium';
+    document.getElementById('task-status-input').value = 'todo';
+    var a = document.getElementById('task-assignee-input');
+    if (a) a.value = '';
+    setText('modal-task-title', 'Nouvelle tâche');
   }
   document.getElementById('modal-' + name).classList.add('open');
-  setTimeout(() => document.getElementById('task-title-input')?.focus(), 50);
+  setTimeout(function() { var el = document.getElementById('task-title-input'); if (el) el.focus(); }, 60);
 }
 
 function closeModal(name) {
@@ -1355,29 +638,301 @@ function closeModalOutside(e) {
   if (e.target === e.currentTarget) closeModal(e.currentTarget.id.replace('modal-', ''));
 }
 
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    var open = document.querySelectorAll('.overlay.open');
+    for (var i = 0; i < open.length; i++) open[i].classList.remove('open');
+  }
 });
 
-/* ─────────────────────────────
-   TOAST
-───────────────────────────── */
-function toast(msg, type = 'info') {
-  const icon = { success: '✓', error: '✕', info: 'ℹ' }[type] || 'ℹ';
-  const el = document.createElement('div');
-  el.className = `toast ${type}`;
-  el.innerHTML = `<span style="font-weight:600;">${icon}</span> ${msg}`;
-  document.getElementById('toasts').appendChild(el);
-  requestAnimationFrame(() => { el.offsetHeight; el.classList.add('show'); });
-  setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 400); }, 3000);
+function editTask(id) {
+  var t = null;
+  for (var i = 0; i < tasks.length; i++) if (tasks[i].id == id) { t = tasks[i]; break; }
+  if (!t) return;
+  document.getElementById('edit-task-id').value = id;
+  document.getElementById('task-title-input').value = t.title;
+  document.getElementById('task-desc-input').value = t.description || '';
+  document.getElementById('task-priority-input').value = t.priority;
+  document.getElementById('task-status-input').value = t.status;
+  var a = document.getElementById('task-assignee-input');
+  if (a) a.value = t.assignee || '';
+  setText('modal-task-title', 'Modifier la tâche');
+  openModal('task');
 }
 
-/* ─────────────────────────────
-   HELPERS
-───────────────────────────── */
-const priorityLabel = p => ({ high: '🔴 Haute', medium: '🟡 Moyenne', low: '🟢 Basse' }[p] || p);
-const statusLabel   = s => ({ todo: 'À faire', inprogress: 'En cours', done: 'Terminé' }[s] || s);
-const escHtml = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+async function saveTask() {
+  var id = document.getElementById('edit-task-id').value;
+  var title = document.getElementById('task-title-input').value.trim();
+  if (!title) { toast('Le titre est obligatoire.', 'error'); return; }
+  var assigneeEl = document.getElementById('task-assignee-input');
+  var payload = {
+    title: title,
+    description: document.getElementById('task-desc-input').value.trim(),
+    priority: document.getElementById('task-priority-input').value,
+    status: document.getElementById('task-status-input').value,
+    assignee: assigneeEl ? assigneeEl.value.trim() : ''
+  };
+  try {
+    if (id) {
+      var updated = await apiFetch('/tasks/' + id, { method: 'PUT', body: JSON.stringify(payload) });
+      for (var i = 0; i < tasks.length; i++) {
+        if (tasks[i].id == id) { tasks[i] = updated || Object.assign({}, tasks[i], payload); break; }
+      }
+      toast('Tâche mise à jour !', 'success');
+    } else {
+      var created = await apiFetch('/tasks', { method: 'POST', body: JSON.stringify(payload) });
+      tasks.push(created || Object.assign({}, payload, {id: Date.now(), ai_score: null, created_at: new Date().toISOString(), updated_at: new Date().toISOString()}));
+      toast('Tâche créée !', 'success');
+    }
+  } catch(e) {
+    var now2 = new Date().toISOString();
+    if (id) {
+      for (var j = 0; j < tasks.length; j++) {
+        if (tasks[j].id == id) { tasks[j] = Object.assign({}, tasks[j], payload, {updated_at: now2}); break; }
+      }
+    } else {
+      tasks.push(Object.assign({}, payload, {id: Date.now(), ai_score: null, created_at: now2, updated_at: now2}));
+    }
+    toast(id ? 'Tâche mise à jour (démo).' : 'Tâche créée (démo).', 'info');
+  }
+  closeModal('task');
+  updateBadge();
+  renderDashboard();
+  var kv = document.getElementById('view-kanban');
+  if (kv && kv.style.display !== 'none') renderKanban();
+}
+
+async function deleteTask(id) {
+  if (!confirm('Supprimer cette tâche ?')) return;
+  try { await apiFetch('/tasks/' + id, { method: 'DELETE' }); } catch(e) {}
+  tasks = tasks.filter(function(t) { return t.id !== id; });
+  updateBadge(); renderDashboard(); renderKanban();
+  toast('Tâche supprimée.', 'info');
+}
+
+async function clearAllTasks() {
+  if (!confirm('Supprimer TOUTES vos tâches ?')) return;
+  try { await apiFetch('/tasks', { method: 'DELETE' }); } catch(e) {}
+  tasks = [];
+  updateBadge(); renderDashboard(); renderKanban();
+  toast('Toutes les tâches supprimées.', 'info');
+}
+
+async function updateTaskStatus(id, status) {
+  for (var i = 0; i < tasks.length; i++) {
+    if (tasks[i].id == id) { tasks[i].status = status; tasks[i].updated_at = new Date().toISOString(); break; }
+  }
+  renderKanban(); renderDashboard(); updateBadge();
+  try { await apiFetch('/tasks/' + id, { method: 'PUT', body: JSON.stringify({ status: status }) }); } catch(e) {}
+}
+
+function renderDashboard() {
+  var total = tasks.length, done = 0, inp = 0, high = 0;
+  for (var i = 0; i < tasks.length; i++) {
+    if (tasks[i].status === 'done') done++;
+    if (tasks[i].status === 'inprogress') inp++;
+    if (tasks[i].priority === 'high') high++;
+  }
+  var pct = total > 0 ? Math.round(done / total * 100) : 0;
+  setText('stat-total', total); setText('stat-done', done);
+  setText('stat-pct', pct + '% du total'); setText('stat-inprogress', inp); setText('stat-high', high);
+
+  var prios = ['high', 'medium', 'low'];
+  var barIds = {high:'prog-high', medium:'prog-med', low:'prog-low'};
+  var lblIds = {high:'prog-high-lbl', medium:'prog-med-lbl', low:'prog-low-lbl'};
+  for (var p = 0; p < prios.length; p++) {
+    var pr = prios[p];
+    var sub = tasks.filter(function(t) { return t.priority === pr; });
+    var dp = sub.filter(function(t) { return t.status === 'done'; }).length;
+    var pp = sub.length > 0 ? Math.round(dp / sub.length * 100) : 0;
+    var bar = document.getElementById(barIds[pr]);
+    if (bar) bar.style.width = pp + '%';
+    setText(lblIds[pr], dp + '/' + sub.length);
+  }
+
+  var container = document.getElementById('recent-list');
+  if (!container) return;
+  var sorted = tasks.slice().sort(function(a, b) { return new Date(b.updated_at) - new Date(a.updated_at); });
+  var recent = sorted.slice(0, 6);
+  if (!recent.length) {
+    container.innerHTML = '<div class="empty"><div class="empty-ico">📋</div><div class="empty-ttl">Aucune tâche</div><p style="font-size:12px">Créez votre première tâche</p></div>';
+    return;
+  }
+  var html = '';
+  for (var r = 0; r < recent.length; r++) {
+    var t = recent[r];
+    html += '<div class="r-item">';
+    html += '<div class="r-dot" style="background:' + pColor(t.priority) + '"></div>';
+    html += '<div class="r-info"><div class="r-title">' + escHtml(t.title) + '</div>';
+    html += '<div class="r-sub">' + sLabel(t.status) + (t.assignee ? ' · ' + escHtml(t.assignee) : '') + '</div></div>';
+    html += '<span class="badge badge-' + t.priority + '">' + pLabel(t.priority) + '</span>';
+    html += '<button class="btn btn-ghost btn-icon btn-sm" onclick="editTask(' + t.id + ')" style="padding:4px 6px;font-size:11px">✏️</button>';
+    html += '</div>';
+  }
+  container.innerHTML = html;
+}
+
+function renderKanban() {
+  var q = (document.getElementById('search-input') ? document.getElementById('search-input').value.toLowerCase() : '');
+  var statuses = ['todo', 'inprogress', 'done'];
+  for (var s = 0; s < statuses.length; s++) {
+    var status = statuses[s];
+    var col = tasks.filter(function(t) {
+      var mf = currentFilter === 'all' || t.priority === currentFilter;
+      var ms = !q || t.title.toLowerCase().indexOf(q) !== -1 || (t.description || '').toLowerCase().indexOf(q) !== -1;
+      return mf && ms && t.status === status;
+    });
+    var el = document.getElementById('tasks-' + status);
+    var cnt = document.getElementById('count-' + status);
+    if (cnt) cnt.textContent = col.length;
+    if (!el) continue;
+    if (!col.length) {
+      el.innerHTML = '<div class="empty" style="padding:24px 12px"><div style="font-size:12px;color:var(--text3)">Glissez des tâches ici</div></div>';
+      continue;
+    }
+    var html = '';
+    for (var c = 0; c < col.length; c++) {
+      var t = col[c];
+      html += '<div class="tcard" draggable="true" ondragstart="onDragStart(event,' + t.id + ')" ondragend="onDragEnd(event)">';
+      if (t.ai_score != null) html += '<div class="tcard-ai">AI #' + t.ai_score + '</div>';
+      html += '<div class="tcard-title">' + escHtml(t.title) + '</div>';
+      if (t.description) html += '<div class="tcard-desc">' + escHtml(t.description) + '</div>';
+      html += '<div class="tcard-meta"><span class="badge badge-' + t.priority + '">' + pLabel(t.priority) + '</span>';
+      if (t.assignee) html += '<span style="font-size:10px;color:var(--text3)">👤 ' + escHtml(t.assignee) + '</span>';
+      html += '<div class="tcard-acts">';
+      html += '<button class="btn btn-ghost btn-icon btn-sm" onclick="editTask(' + t.id + ')" style="padding:3px 5px;font-size:11px">✏️</button>';
+      html += '<button class="btn btn-danger btn-icon btn-sm" onclick="deleteTask(' + t.id + ')" style="padding:3px 5px;font-size:11px">🗑️</button>';
+      html += '</div></div></div>';
+    }
+    el.innerHTML = html;
+  }
+}
+
+function filterKanban(p, btn) {
+  currentFilter = p;
+  var tabs = document.querySelectorAll('#view-kanban .tab');
+  for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
+  if (btn) btn.classList.add('active');
+  renderKanban();
+}
+
+function filterTasks() {
+  var kv = document.getElementById('view-kanban');
+  if (kv && kv.style.display !== 'none') renderKanban();
+}
+
+function onDragStart(e, id) { draggedId = id; e.currentTarget.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; }
+function onDragEnd(e) {
+  e.currentTarget.classList.remove('dragging');
+  var cols = document.querySelectorAll('.k-col');
+  for (var i = 0; i < cols.length; i++) cols[i].classList.remove('drag-over');
+}
+function onDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; e.currentTarget.classList.add('drag-over'); }
+function onDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+function onDrop(e, status) { e.preventDefault(); e.currentTarget.classList.remove('drag-over'); if (draggedId !== null) { updateTaskStatus(draggedId, status); draggedId = null; } }
+
+function renderAnalytics() {
+  var total = tasks.length, done = 0, ai = 0;
+  for (var i = 0; i < tasks.length; i++) {
+    if (tasks[i].status === 'done') done++;
+    if (tasks[i].ai_score != null) ai++;
+  }
+  var pct = total > 0 ? Math.round(done / total * 100) + '%' : '—';
+  var vel = '—';
+  if (done > 0 && tasks.length > 0) {
+    var oldest = new Date(tasks[0].created_at);
+    for (var j = 1; j < tasks.length; j++) { var d = new Date(tasks[j].created_at); if (d < oldest) oldest = d; }
+    var weeks = Math.max(1, Math.ceil((Date.now() - oldest) / (7 * 24 * 3600 * 1000)));
+    vel = (done / weeks).toFixed(1);
+  }
+  setText('ana-velocity', vel); setText('ana-completion', pct); setText('ana-ai', ai);
+
+  var opts = { responsive: true, plugins: { legend: { labels: { color: '#94a3b8', font: { size: 11, family: 'Inter' }, padding: 14 } } } };
+  var ctxP = document.getElementById('chart-priority');
+  var ctxS = document.getElementById('chart-status');
+  var high = 0, med = 0, low = 0, todo = 0, inp = 0, dn = 0;
+  for (var k = 0; k < tasks.length; k++) {
+    if (tasks[k].priority === 'high') high++;
+    if (tasks[k].priority === 'medium') med++;
+    if (tasks[k].priority === 'low') low++;
+    if (tasks[k].status === 'todo') todo++;
+    if (tasks[k].status === 'inprogress') inp++;
+    if (tasks[k].status === 'done') dn++;
+  }
+  if (chartP) { chartP.destroy(); chartP = null; }
+  if (chartS) { chartS.destroy(); chartS = null; }
+  if (ctxP) chartP = new Chart(ctxP, { type: 'doughnut', data: { labels: ['Haute','Moyenne','Basse'], datasets: [{ data: [high,med,low], backgroundColor: ['rgba(244,63,94,0.7)','rgba(245,158,11,0.7)','rgba(99,102,241,0.7)'], borderColor: ['#f43f5e','#f59e0b','#6366f1'], borderWidth: 1.5 }] }, options: opts });
+  if (ctxS) chartS = new Chart(ctxS, { type: 'doughnut', data: { labels: ['À faire','En cours','Terminé'], datasets: [{ data: [todo,inp,dn], backgroundColor: ['rgba(99,102,241,0.6)','rgba(245,158,11,0.6)','rgba(16,185,129,0.6)'], borderColor: ['#6366f1','#f59e0b','#10b981'], borderWidth: 1.5 }] }, options: opts });
+}
+
+async function runAIPrioritize() {
+  var btn = document.getElementById('ai-quick-btn');
+  if (!btn) return;
+  var orig = btn.innerHTML;
+  btn.innerHTML = '<span class="spin"></span> Analyse...';
+  btn.disabled = true;
+  var taskList = tasks.map(function(t) { return t.title; });
+  try {
+    var res = await apiFetch('/ai/prioritize', { method: 'POST', body: JSON.stringify({ tasks: taskList }) });
+    setText('ai-quick-text', res && res.result ? res.result : JSON.stringify(res));
+    show('ai-quick-result');
+    toast('Analyse IA terminée !', 'success');
+  } catch(e) {
+    setText('ai-quick-text', 'Backend non connecté.\n\nLancez : cd Backend && py -m uvicorn main:app --reload');
+    show('ai-quick-result');
+  }
+  btn.innerHTML = orig; btn.disabled = false;
+}
+
+async function runAIFull() {
+  var btn = document.getElementById('ai-full-btn');
+  if (!btn) return;
+  if (!tasks.length) { toast('Aucune tâche à analyser.', 'error'); return; }
+  var context = document.getElementById('ai-context') ? document.getElementById('ai-context').value : '';
+  var criteria = document.getElementById('ai-criteria') ? document.getElementById('ai-criteria').value : 'impact';
+  var orig = btn.innerHTML;
+  btn.innerHTML = '<span class="spin"></span> Analyse en cours...';
+  btn.disabled = true;
+  var lines = [];
+  for (var i = 0; i < tasks.length; i++) {
+    lines.push((i+1) + '. [' + tasks[i].priority.toUpperCase() + '] ' + tasks[i].title + (tasks[i].description ? ' — ' + tasks[i].description : ''));
+  }
+  var tasksStr = lines.join('\n');
+  try {
+    var res = await apiFetch('/ai/prioritize', { method: 'POST', body: JSON.stringify({ tasks: tasksStr, context: context, criteria: criteria }) });
+    setText('ai-full-text', res && res.result ? res.result : JSON.stringify(res));
+    show('ai-full-result');
+    toast('Analyse complète terminée !', 'success');
+  } catch(e) {
+    setText('ai-full-text', 'Backend non connecté.\n\n' + tasksStr);
+    show('ai-full-result');
+  }
+  btn.innerHTML = orig; btn.disabled = false;
+}
+
+function toast(msg, type) {
+  if (!type) type = 'info';
+  var icons = { success: '✓', error: '✕', info: 'ℹ' };
+  var el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.innerHTML = '<span style="font-weight:700">' + (icons[type] || 'ℹ') + '</span> ' + escHtml(msg);
+  var c = document.getElementById('toasts');
+  if (!c) return;
+  c.appendChild(el);
+  requestAnimationFrame(function() { el.offsetHeight; el.classList.add('show'); });
+  setTimeout(function() { el.classList.remove('show'); setTimeout(function() { el.remove(); }, 400); }, 3500);
+}
+
+function pLabel(p) { return {high:'🔴 Haute', medium:'🟡 Moyenne', low:'🟢 Basse'}[p] || p; }
+function sLabel(s) { return {todo:'À faire', inprogress:'En cours', done:'Terminé'}[s] || s; }
+function pColor(p) { return {high:'#f43f5e', medium:'#f59e0b', low:'#10b981'}[p] || '#6366f1'; }
+function escHtml(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+function setText(id, v) { var el = document.getElementById(id); if (el) el.textContent = v; }
+function show(id) { var el = document.getElementById(id); if (el) el.style.display = ''; }
 </script>
 </body>
 </html>
